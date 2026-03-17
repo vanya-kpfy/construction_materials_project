@@ -69,9 +69,11 @@ namespace branch_for_registration_1.UsersServices
         public string ValidateUser(string email, string passwordHash)
         {
             // Ищем пользователя с подходящими данными и загружаем его роль
-            User user = db.Users.Where(u => u.Email.ToLower() == email.ToLower()&& u.PasswordHash == passwordHash&& u.IsActive).FirstOrDefault();
+            User user = db.Users.Where(u => u.Email.ToLower() == email.ToLower() && u.PasswordHash == passwordHash && u.IsActive).FirstOrDefault();
             if (user == null)
-                return null;
+            {  
+                return null; 
+            }
             // Явно загружаем связанную роль
             db.Entry(user).Reference(u => u.Role).Load();
             return user.Role?.Title;
