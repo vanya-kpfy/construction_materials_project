@@ -3,17 +3,37 @@ using Microsoft.EntityFrameworkCore;
 
 namespace branch_for_registration_1.DataBase
 {
+    /// <summary>
+    /// Класс работы с базой данных
+    /// </summary>
     public class AppDbContext : DbContext
     {
         // Строка подключения
         private static string connectionString = "Host=localhost;Port=5432;Database=DB;Username=postgres;Password=1245";
 
-        // Наборы данных (таблицы)
+        /// <summary>
+        /// Модель таблицы Ролей
+        /// </summary>
         public DbSet<Role> Roles { get; set; }
+        /// <summary>
+        /// Модель таблицы Пользователей
+        /// </summary>
         public DbSet<User> Users { get; set; }
+        /// <summary>
+        /// Модель таблицы с Категориями
+        /// </summary>
         public DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// Модель таблицы с Товарами
+        /// </summary>
         public DbSet<Product> Products { get; set; }
+        /// <summary>
+        /// Модель таблицы Отрузок
+        /// </summary>
         public DbSet<Shipment> Shipments { get; set; }
+        /// <summary>
+        /// Модель таблицы Айди отгрузок
+        /// </summary>
         public DbSet<ShipmentItem> ShipmentItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -100,7 +120,9 @@ namespace branch_for_registration_1.DataBase
                 entity.HasOne(si => si.Product).WithMany().HasForeignKey(si => si.ProductId).OnDelete(DeleteBehavior.Restrict);
             });
         }
-        // Метод для создания базы данных, если её нет
+        /// <summary>
+        /// Метод для создания базы данных, если её нет
+        /// </summary>
         public void EnsureDatabaseCreated()
         {
             Database.EnsureCreated();
