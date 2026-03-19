@@ -36,6 +36,13 @@ namespace branch_for_registration_1.DataBase
         /// </summary>
         public DbSet<ShipmentItem> ShipmentItems { get; set; }
 
+        // Для тестировния
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        { }
+
+        public AppDbContext()
+        { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -119,13 +126,6 @@ namespace branch_for_registration_1.DataBase
                 // Связь с Product
                 entity.HasOne(si => si.Product).WithMany().HasForeignKey(si => si.ProductId).OnDelete(DeleteBehavior.Restrict);
             });
-        }
-        /// <summary>
-        /// Метод для создания базы данных, если её нет
-        /// </summary>
-        public void EnsureDatabaseCreated()
-        {
-            Database.EnsureCreated();
         }
     }
 }

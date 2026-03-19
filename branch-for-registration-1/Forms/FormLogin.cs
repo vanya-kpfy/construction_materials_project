@@ -66,7 +66,7 @@ namespace branch_for_registration_1.Forms
         }
 
         /// <summary>
-        /// Обработчик кнопки "Register" – открывает форму регистрации
+        /// /Обработчик кнопки "Register" – открывает форму регистрации
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

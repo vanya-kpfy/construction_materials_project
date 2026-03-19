@@ -12,7 +12,7 @@ namespace branch_for_registration_1.ValidationTextBox
         /// <summary>
         /// Запрещаем ввод пробела и Enter.
         /// </summary>
-        /// <param name="textBox"></param>
+        /// <param name="textBox">Текстовое поле, к которому применяется запрет</param>
         public static void DisableSpaceAndEnter(TextBox textBox)
         {
             textBox.KeyPress += TextBox_KeyPress_NoSpaceNoEnter;
@@ -31,8 +31,8 @@ namespace branch_for_registration_1.ValidationTextBox
         /// <summary>
         /// Проверяет, является ли строка корректным email-адресом.
         /// </summary>
-        /// <param name="email"></param>
-        /// <returns></returns>
+        /// <param name="email">Проверяемый адрес</param>
+        /// <returns>true, если email корректен; иначе false.</returns>
         public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))

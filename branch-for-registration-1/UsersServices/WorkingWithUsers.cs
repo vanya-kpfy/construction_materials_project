@@ -18,7 +18,12 @@ namespace branch_for_registration_1.UsersServices
         public WorkingWithUsers()
         {
             db = new AppDbContext();
-            db.EnsureDatabaseCreated();
+        }
+
+        // Для тестирования
+        public WorkingWithUsers(AppDbContext dbContext)
+        {
+            db = dbContext;
         }
 
         /// <summary>
@@ -28,8 +33,21 @@ namespace branch_for_registration_1.UsersServices
         /// <returns></returns>
         public bool EmailExists(string email)
         {
-            // Используем LINQ (метод Any)
-            return db.Users.Any(u => u.Email.ToLower() == email.ToLower());
+            if (string.IsNullOrEmpty(email))
+            {
+                return false;
+            }
+            try
+            {
+                // Приводим к нижнему регистру для сравнения без учёта регистра
+                return db.Users.Any(u => u.Email.ToLower() == email.ToLower());
+            }
+            catch (Exception ex)
+            {
+                // Логируем ошибку или показываем сообщение
+                Console.WriteLine($"Error in EmailExists: {ex.Message}");
+                return false;
+            }
         }
 
         /// <summary>
@@ -48,8 +66,12 @@ namespace branch_for_registration_1.UsersServices
             // Если роли Worker нет, создаём их
             if (workerRole == null)
             {
-                db.Roles.AddRange(new Role { Id = Guid.NewGuid(), Title = "Worker" });
-                db.SaveChanges();
+                // Создаём новую роль
+                Role newRole = new Role { Id = Guid.NewGuid(), Title = "Worker" };
+                db.Roles.Add(newRole);
+                db.SaveChanges(); // сохраняем отдельно
+
+                // Получаем созданную роль
                 workerRole = db.Roles.First(r => r.Title == "Worker");
             }
 

@@ -12,9 +12,6 @@ namespace branch_for_registration_1
         {
             // Инициализация БД
             using (AppDbContext db = new AppDbContext())
-            {
-                db.EnsureDatabaseCreated();
-            }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new FormLogin());

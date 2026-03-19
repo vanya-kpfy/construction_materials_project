@@ -112,14 +112,5 @@ namespace branch_for_registration_1.Forms
             userService.Dispose();
             base.OnFormClosing(e);
         }
-        /// <summary>
-        /// Выход на форму авторизации (закрываем форму регистрации)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void buttonRegisrationINAuth_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
     }
 }
