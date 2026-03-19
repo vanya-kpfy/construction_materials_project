@@ -21,6 +21,12 @@ namespace branch_for_registration_1.UsersServices
             db.EnsureDatabaseCreated();
         }
 
+        // Для тестирования
+        public WorkingWithUsers(AppDbContext dbContext)
+        {
+            db = dbContext;
+        }
+
         /// <summary>
         /// Проверяет, занят ли указанный email
         /// </summary>
