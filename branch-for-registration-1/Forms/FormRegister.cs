@@ -1,5 +1,6 @@
 ﻿using branch_for_registration_1.HeshSHA256;
 using branch_for_registration_1.UsersServices;
+using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Windows.Forms;
 
@@ -19,11 +20,21 @@ namespace branch_for_registration_1.Forms
         {
             InitializeComponent();
             userService = new WorkingWithUsers();
+
+            // Запрет пробелов и Enter на всех текстовых полях
+            ValidationHelper.DisableSpaceAndEnter(textBoxFirstName);
+            ValidationHelper.DisableSpaceAndEnter(textBoxLastName);
+            ValidationHelper.DisableSpaceAndEnter(textBoxMiddleName);
+            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
+            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
+            ValidationHelper.DisableSpaceAndEnter(textBoxConfirmPassword);
         }
 
         /// <summary>
         /// Обработчик кнопки регистрации
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRegister_Click(object sender, EventArgs e)
         {
             var firstName = textBoxFirstName.Text.Trim();
@@ -75,6 +86,8 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Обработчик кнопки "Already have an account? Login" – возврат к форме входа
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonGoToLogin_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -83,6 +96,8 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Обработчик кнопки "Cancel"
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -91,10 +106,20 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Освобождение ресурсов
         /// </summary>
+        /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             userService.Dispose();
             base.OnFormClosing(e);
+        }
+        /// <summary>
+        /// Выход на форму авторизации (закрываем форму регистрации)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonRegisrationINAuth_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

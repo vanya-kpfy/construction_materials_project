@@ -1,5 +1,6 @@
 ﻿using branch_for_registration_1.HeshSHA256;
 using branch_for_registration_1.UsersServices;
+using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Windows.Forms;
 
@@ -19,11 +20,17 @@ namespace branch_for_registration_1.Forms
         {
             InitializeComponent();
             userService = new WorkingWithUsers();
+
+            // Применяем запрет пробелов и Enter ко всем текстовым полям
+            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
+            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
         }
 
         /// <summary>
         /// Обработчик нажатия кнопки "Login"
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonLogin_Click(object sender, EventArgs e)
         {
             var email = textBoxEmail.Text.Trim();
@@ -61,6 +68,8 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Обработчик кнопки "Register" – открывает форму регистрации
         /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRegister_Click(object sender, EventArgs e)
         {
             FormRegister regForm = new FormRegister();
@@ -70,6 +79,7 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Освобождение ресурсов при закрытии формы
         /// </summary>
+        /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
             userService.Dispose();

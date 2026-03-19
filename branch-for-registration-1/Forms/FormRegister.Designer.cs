@@ -256,6 +256,7 @@
             this.buttonRegisrationINAuth.TabIndex = 16;
             this.buttonRegisrationINAuth.Text = "Уже есть аккаунт? Авторизоваться";
             this.buttonRegisrationINAuth.UseVisualStyleBackColor = false;
+            this.buttonRegisrationINAuth.Click += new System.EventHandler(this.buttonRegisrationINAuth_Click);
             // 
             // FormRegister
             // 

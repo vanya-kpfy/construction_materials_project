@@ -24,6 +24,8 @@ namespace branch_for_registration_1.UsersServices
         /// <summary>
         /// Проверяет, занят ли указанный email
         /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public bool EmailExists(string email)
         {
             // Используем LINQ (метод Any)
@@ -33,6 +35,11 @@ namespace branch_for_registration_1.UsersServices
         /// <summary>
         /// Добавляет нового пользователя с ролью Worker
         /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="middleName"></param>
+        /// <param name="email"></param>
+        /// <param name="passwordHash"></param>
         public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
         {
             // Ищем роль Worker в базе
@@ -66,6 +73,9 @@ namespace branch_for_registration_1.UsersServices
         /// <summary>
         /// Проверяет логин пользователя и возвращает его роль
         /// </summary>
+        /// <param name="email"></param>
+        /// <param name="passwordHash"></param>
+        /// <returns></returns>
         public string ValidateUser(string email, string passwordHash)
         {
             // Ищем пользователя с подходящими данными и загружаем его роль

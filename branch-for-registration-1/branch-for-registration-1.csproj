@@ -308,6 +308,7 @@
     <Compile Include="UsersServices\CategoryService.cs" />
     <Compile Include="UsersServices\ProductService.cs" />
     <Compile Include="UsersServices\WorkingWithUsers.cs" />
+    <Compile Include="ValidationTextBox\ValidationHelper.cs" />
     <EmbeddedResource Include="Forms\FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </EmbeddedResource>
