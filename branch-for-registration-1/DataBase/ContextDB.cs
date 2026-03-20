@@ -9,7 +9,7 @@ namespace branch_for_registration_1.DataBase
     public class AppDbContext : DbContext
     {
         // Строка подключения
-        private static string connectionString = "Host=localhost;Port=5432;Database=DB;Username=postgres;Password=1245";
+        private static string connectionString = "Host=localhost;Port=5432;Database=DB;Username=postgres;Password=1245admin";
 
         /// <summary>
         /// Модель таблицы Ролей

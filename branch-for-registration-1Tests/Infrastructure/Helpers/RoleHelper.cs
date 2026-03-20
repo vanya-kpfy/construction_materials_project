@@ -10,7 +10,7 @@ namespace branch_for_registration_1Tests.Infrastructure.Helpers
             return new Role
             {
                 Id = useExisting? roleId : Guid.NewGuid(),
-                Title = "Worker",
+                Title = "ROLE",
                 //Users = new List<User> { UserHelper.GetOne() }
             };
         }
