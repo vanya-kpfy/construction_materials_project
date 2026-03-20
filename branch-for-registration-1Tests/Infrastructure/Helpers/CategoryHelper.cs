@@ -2,19 +2,18 @@
 
 namespace branch_for_registration_1Tests.Infrastructure.Helpers
 {
-    public static class RoleHelper
+    public static class CategoryHelper
     {
-        public static Role GetOne()
+        public static Category GetOne()
         {
-            return new Role
+            return new Category
             {
                 Id = Guid.NewGuid(),
-                Title = "ROLE",
-                //Users = new List<User> { UserHelper.GetOne() }
+                Name = "CATEGORY",
             };
         }
 
-        public static IEnumerable<Role> GetMany()
+        public static IEnumerable<Category> GetMany()
         {
             yield return GetOne();
         }

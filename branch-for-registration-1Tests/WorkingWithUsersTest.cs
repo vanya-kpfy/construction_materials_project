@@ -15,14 +15,14 @@ namespace branch_for_registration_1Tests
         public void Setup()
         {
             contextHelper = new AppDbContextHelper();
-            contextHelper.AddNewData();
+            contextHelper.AddUserAndRole_ForTest();
             workingWithUsers = new WorkingWithUsers(contextHelper.Context);
         }
 
         [TestCleanup]
         public void Cleanup()
         {
-            contextHelper.Context.Database.EnsureCreated();
+            contextHelper.Context.Database.EnsureDeleted();
             contextHelper = null;
             workingWithUsers = null;
         }
@@ -56,10 +56,10 @@ namespace branch_for_registration_1Tests
             contextHelper.Context.Roles.Add(role);
             contextHelper.Context.SaveChanges();
 
-            // Accept
+            // Act
             var result = workingWithUsers.GetOrCreateWorkerRole();
 
-            // Act
+            // Assert
             Assert.IsNotNull(result);
             Assert.AreEqual(result.Id,role.Id);
             Assert.AreEqual("Worker", result.Title);

@@ -25,10 +25,34 @@ namespace branch_for_registration_1Tests.Infrastructure.Helpers
             Context = new AppDbContext(options);
         }
 
-        public void AddNewData()
+        public void AddUserAndRole_ForTest()
         {
             Context.AddRange(UserHelper.GetMany());
             //Context.AddRange(RoleHelper.GetMany());
+            Context.AddRange(ProductHelper.GetMany());
+            Context.SaveChanges();
+        }
+
+        public void AddProductAndCategory_ForTest()
+        {
+            var categoryHelper = CategoryHelper.GetOne();
+            var productHelper1 = ProductHelper.GetOne_WithConnectCategory(categoryHelper);
+            var productHelper2 = ProductHelper.GetOne_WithConnectCategory(categoryHelper);
+            var productHelper3 = ProductHelper.GetOne_WithConnectCategory(categoryHelper);
+            
+            categoryHelper.Products.AddRange(new[] { productHelper1, productHelper2, productHelper3 });
+            Context.SaveChanges();
+        }
+
+        public void AddProductAndCategory_ForTest(string name1, string name2, string name3)
+        {
+            var categoryHelper = CategoryHelper.GetOne();
+            var productHelper1 = ProductHelper.GetOne_WithConnectCategory_AndName(categoryHelper, name1);
+            var productHelper2 = ProductHelper.GetOne_WithConnectCategory_AndName(categoryHelper, name2);
+            var productHelper3 = ProductHelper.GetOne_WithConnectCategory_AndName(categoryHelper, name3);
+            Context.AddRange(new[] { productHelper1, productHelper2, productHelper3 });
+
+            categoryHelper.Products.AddRange(new[] { productHelper1, productHelper2, productHelper3 });
             Context.SaveChanges();
         }
     }

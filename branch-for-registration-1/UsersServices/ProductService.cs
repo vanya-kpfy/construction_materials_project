@@ -16,6 +16,12 @@ namespace branch_for_registration_1.UsersServices
             db = new AppDbContext();
         }
 
+        // Для тестирования
+        public ProductService(AppDbContext db)
+        {
+            this.db = db;
+        }
+
         // Получить все товары с категориями (для DataGridView)
         public List<Product> GetAllProducts()
         {
