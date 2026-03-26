@@ -32,6 +32,7 @@
             this.textBoxVisualAdmin = new System.Windows.Forms.TextBox();
             this.textBoxVisualFon = new System.Windows.Forms.TextBox();
             this.textBoxDecor = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxVisualAdmin
@@ -71,6 +72,15 @@
             this.textBoxDecor.Size = new System.Drawing.Size(190, 3);
             this.textBoxDecor.TabIndex = 24;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 105);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(222, 34);
+            this.button1.TabIndex = 25;
+            this.button1.Text = "Список работников";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
             // FormAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -79,6 +89,7 @@
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1567, 857);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDecor);
             this.Controls.Add(this.textBoxVisualAdmin);
             this.Controls.Add(this.textBoxVisualFon);
@@ -95,5 +106,6 @@
         private System.Windows.Forms.TextBox textBoxVisualAdmin;
         private System.Windows.Forms.TextBox textBoxVisualFon;
         private System.Windows.Forms.TextBox textBoxDecor;
+        private System.Windows.Forms.Button button1;
     }
 }
