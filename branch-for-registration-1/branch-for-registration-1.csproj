@@ -403,6 +403,7 @@
     <None Include="Resources\Fon %281%29.png" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Resource Include="Resources\FonDB.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
@@ -411,6 +412,9 @@
     <Content Include="Images\FonDB.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+=======
+    <Folder Include="Interfaces\" />
+>>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

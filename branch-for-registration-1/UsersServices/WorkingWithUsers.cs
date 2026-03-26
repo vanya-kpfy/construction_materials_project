@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace branch_for_registration_1.UsersServices
 {
@@ -22,13 +23,18 @@ namespace branch_for_registration_1.UsersServices
             db = new AppDbContext();
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Для тестирования
         /// </summary>
         /// <param name="dbContext"></param>
         public WorkingWithUsers(AppDbContext dbContext)
+=======
+        // Для тестирования
+        public WorkingWithUsers(AppDbContext db)
+>>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
         {
-            db = dbContext;
+            this.db = db;
         }
 
         /// <summary>
@@ -55,18 +61,10 @@ namespace branch_for_registration_1.UsersServices
             }
         }
 
-        /// <summary>
-        /// Добавляет нового пользователя с ролью Worker
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="middleName"></param>
-        /// <param name="email"></param>
-        /// <param name="passwordHash"></param>
-        public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
+        public Role GetOrCreateWorkerRole()
         {
             // Ищем роль Worker в базе
-            Role workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker");
+            var workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker"); ;
 
             // Если роли Worker нет, создаём их
             if (workerRole == null)
@@ -79,6 +77,20 @@ namespace branch_for_registration_1.UsersServices
                 // Получаем созданную роль
                 workerRole = db.Roles.First(r => r.Title == "Worker");
             }
+            return workerRole;
+        }
+
+        /// <summary>
+        /// Добавляет нового пользователя с ролью Worker
+        /// </summary>
+        /// <param name="firstName"></param>
+        /// <param name="lastName"></param>
+        /// <param name="middleName"></param>
+        /// <param name="email"></param>
+        /// <param name="passwordHash"></param>
+        public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
+        {
+            var workerRole = GetOrCreateWorkerRole();
 
             // Создаём объект нового пользователя
             User newUser = new User
@@ -105,6 +117,22 @@ namespace branch_for_registration_1.UsersServices
         /// <returns></returns>
         public string ValidateUser(string email, string passwordHash)
         {
+            var user = db.Users.Include(u => u.Role)
+                .FirstOrDefault(u =>
+                    u.Email.ToLower() == email.ToLower() &&
+                    u.PasswordHash == passwordHash &&
+                    u.IsActive);
+
+            if (user == null || user.Role == null)
+            {
+                return null;
+            }
+
+            return user.Role?.Title;
+        }
+
+        public string ValidateUserExplicit(string email, string passwordHash)
+        {
             // Ищем пользователя с подходящими данными и загружаем его роль
             User user = db.Users.Where(u => u.Email.ToLower() == email.ToLower() && u.PasswordHash == passwordHash && u.IsActive).FirstOrDefault();
             if (user == null)
@@ -115,6 +143,7 @@ namespace branch_for_registration_1.UsersServices
             db.Entry(user).Reference(u => u.Role).Load();
             return user.Role?.Title;
         }
+<<<<<<< HEAD
 
         /// <summary>
         /// Возвращает всех пользователей с их ролями
@@ -165,6 +194,9 @@ namespace branch_for_registration_1.UsersServices
             return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         }
 
+=======
+        
+>>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
         /// <summary>
         /// Освобождает ресурсы контекста базы данных (без этого метода компилятор выдает ошибку, что не осуществлен метод Dispose, поэтому написал)
         /// </summary>
