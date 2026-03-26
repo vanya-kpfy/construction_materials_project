@@ -1,6 +1,8 @@
-﻿using System;
-using branch_for_registration_1.Classes;
+﻿using branch_for_registration_1.Classes;
 using branch_for_registration_1.DataBase;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace branch_for_registration_1.UsersServices
@@ -20,7 +22,10 @@ namespace branch_for_registration_1.UsersServices
             db = new AppDbContext();
         }
 
-        // Для тестирования
+        /// <summary>
+        /// Для тестирования
+        /// </summary>
+        /// <param name="dbContext"></param>
         public WorkingWithUsers(AppDbContext dbContext)
         {
             db = dbContext;
@@ -110,6 +115,56 @@ namespace branch_for_registration_1.UsersServices
             db.Entry(user).Reference(u => u.Role).Load();
             return user.Role?.Title;
         }
+
+        /// <summary>
+        /// Возвращает всех пользователей с их ролями
+        /// </summary>
+        /// <returns></returns>
+        public List<User> GetAllUsers()
+        {
+            return db.Users.Include(u => u.Role).ToList();
+        }
+
+        /// <summary>
+        /// Обновляет роль пользователя
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="newRoleId"></param>
+        public void UpdateUserRole(Guid userId, Guid newRoleId)
+        {
+            var user = db.Users.Find(userId);
+            if (user != null)
+            {
+                user.RoleId = newRoleId;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Активирует или деактивирует учётную запись
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="isActive"></param>
+        public void SetUserActive(Guid userId, bool isActive)
+        {
+            var user = db.Users.Find(userId);
+            if (user != null)
+            {
+                user.IsActive = isActive;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Возвращает пользователя по email.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public User GetUserByEmail(string email)
+        {
+            return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        }
+
         /// <summary>
         /// Освобождает ресурсы контекста базы данных (без этого метода компилятор выдает ошибку, что не осуществлен метод Dispose, поэтому написал)
         /// </summary>

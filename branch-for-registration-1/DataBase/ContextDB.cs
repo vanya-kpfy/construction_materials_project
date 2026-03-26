@@ -127,5 +127,13 @@ namespace branch_for_registration_1.DataBase
                 entity.HasOne(si => si.Product).WithMany().HasForeignKey(si => si.ProductId).OnDelete(DeleteBehavior.Restrict);
             });
         }
+
+        /// <summary>
+        /// Создаёт базу данных, если она не существует
+        /// </summary>
+        public void EnsureDatabaseCreated()
+        {
+            Database.EnsureCreated();
+        }
     }
 }

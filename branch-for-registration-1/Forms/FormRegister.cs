@@ -69,6 +69,12 @@ namespace branch_for_registration_1.Forms
                 return;
             }
 
+            if (!ValidationHelper.IsValidEmail(email))
+            {
+                MessageBox.Show("Please enter a valid email address (e.g., name@domain.com).","Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             // Проверка уникальности email
             if (userService.EmailExists(email))
             {
@@ -111,6 +117,11 @@ namespace branch_for_registration_1.Forms
         {
             userService.Dispose();
             base.OnFormClosing(e);
+        }
+
+        private void buttonRegisrationINAuth_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

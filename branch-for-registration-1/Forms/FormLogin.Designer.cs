@@ -47,6 +47,7 @@ namespace branch_for_registration_1.Forms
             // 
             this.textBoxEmail.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBoxEmail.BackColor = System.Drawing.Color.White;
+            this.textBoxEmail.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxEmail.ForeColor = System.Drawing.Color.Black;
             this.textBoxEmail.Location = new System.Drawing.Point(697, 350);
             this.textBoxEmail.Multiline = true;
@@ -60,6 +61,7 @@ namespace branch_for_registration_1.Forms
             // 
             this.textBoxPassword.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBoxPassword.BackColor = System.Drawing.Color.White;
+            this.textBoxPassword.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.textBoxPassword.ForeColor = System.Drawing.Color.Black;
             this.textBoxPassword.Location = new System.Drawing.Point(697, 476);
             this.textBoxPassword.Multiline = true;
@@ -190,7 +192,7 @@ namespace branch_for_registration_1.Forms
             this.ForeColor = System.Drawing.Color.Crimson;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormLogin";
-            this.Text = "FormLogin";
+            this.Text = "Sign-in";
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -284,6 +284,36 @@
     <Compile Include="Classes\ShipmentItem.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="DataBase\ContextDB.cs" />
+    <Compile Include="Forms\FormAddCategory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAddCategory.Designer.cs">
+      <DependentUpon>FormAddCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAddProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAddProduct.Designer.cs">
+      <DependentUpon>FormAddProduct.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormAdmin.Designer.cs">
+      <DependentUpon>FormAdmin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEditCategory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEditCategory.Designer.cs">
+      <DependentUpon>FormEditCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEditProduct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEditProduct.Designer.cs">
+      <DependentUpon>FormEditProduct.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -302,13 +332,37 @@
     <Compile Include="Forms\FormRegister.Designer.cs">
       <DependentUpon>FormRegister.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormSearch.Designer.cs">
+      <DependentUpon>FormSearch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormShipment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormShipment.Designer.cs">
+      <DependentUpon>FormShipment.cs</DependentUpon>
+    </Compile>
     <Compile Include="HeshSHA256\HashHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="UsersServices\CategoryService.cs" />
     <Compile Include="UsersServices\ProductService.cs" />
+    <Compile Include="UsersServices\ShipmentService.cs" />
     <Compile Include="UsersServices\WorkingWithUsers.cs" />
     <Compile Include="ValidationTextBox\ValidationHelper.cs" />
+    <EmbeddedResource Include="Forms\FormAddProduct.resx">
+      <DependentUpon>FormAddProduct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormAdmin.resx">
+      <DependentUpon>FormAdmin.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
     </EmbeddedResource>
@@ -318,16 +372,16 @@
     <EmbeddedResource Include="Forms\FormRegister.resx">
       <DependentUpon>FormRegister.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="Forms\FormSearch.resx">
+      <DependentUpon>FormSearch.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
+    <EmbeddedResource Include="Forms\FormShipment.resx">
+      <DependentUpon>FormShipment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -347,6 +401,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Fon %281%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FonDB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\FonDB.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

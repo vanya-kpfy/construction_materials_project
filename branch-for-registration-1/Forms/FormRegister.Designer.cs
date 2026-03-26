@@ -256,13 +256,14 @@
             this.buttonRegisrationINAuth.TabIndex = 16;
             this.buttonRegisrationINAuth.Text = "Уже есть аккаунт? Авторизоваться";
             this.buttonRegisrationINAuth.UseVisualStyleBackColor = false;
+            this.buttonRegisrationINAuth.Click += new System.EventHandler(this.buttonRegisrationINAuth_Click);
             // 
             // FormRegister
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.BackgroundImage = global::branch_for_registration_1.Properties.Resources.Fon__1_;
+            this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.ClientSize = new System.Drawing.Size(1756, 1257);
             this.Controls.Add(this.buttonRegisrationINAuth);
@@ -285,7 +286,7 @@
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormRegister";
-            this.Text = "FormRegister";
+            this.Text = "Sign-up";
             this.ResumeLayout(false);
             this.PerformLayout();
 

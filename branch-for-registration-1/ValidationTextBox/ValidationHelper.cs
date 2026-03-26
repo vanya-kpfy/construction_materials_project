@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace branch_for_registration_1.ValidationTextBox
@@ -29,35 +28,15 @@ namespace branch_for_registration_1.ValidationTextBox
         }
 
         /// <summary>
-        /// Проверяет, является ли строка корректным email-адресом.
+        /// Проверяет, является ли строка корректным email-адресом (с помощью регулярного выражения).
         /// </summary>
-        /// <param name="email">Проверяемый адрес</param>
-        /// <returns>true, если email корректен; иначе false.</returns>
         public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
-            {
                 return false;
-            }
-            // Должна быть одна '@'
-            var atIndex = email.IndexOf('@');
-            if (atIndex <= 0 || atIndex != email.LastIndexOf('@'))
-            {
-                return false;
-            }
-            // Локальная часть не пуста
-            var local = email.Substring(0, atIndex);
-            if (string.IsNullOrEmpty(local))
-            {
-                return false;
-            }
-            // Домен должен содержать хотя бы одну точку и не начинаться/заканчиваться точкой
-            var domain = email.Substring(atIndex + 1);
-            if (string.IsNullOrEmpty(domain) || !domain.Contains('.') || domain.StartsWith(".") || domain.EndsWith("."))
-            {
-                return false;
-            }
-            return true;
+
+            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            return Regex.IsMatch(email, pattern);
         }
     }
 }
