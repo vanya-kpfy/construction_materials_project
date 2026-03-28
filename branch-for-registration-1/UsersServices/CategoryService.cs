@@ -43,7 +43,7 @@ namespace branch_for_registration_1.UsersServices
         /// <exception cref="Exception"></exception>
         public void AddCategory(string name)
         {
-            if (db.Categories.Any(c => c.Name == name))
+            if (db.Categories.Any(c => c.Name == name))///
                 throw new Exception("A category with this name already exists.");
             db.Categories.Add(new Category { Id = Guid.NewGuid(), Name = name });
             db.SaveChanges();

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace branch_for_registration_1.UsersServices
 {
@@ -23,16 +22,8 @@ namespace branch_for_registration_1.UsersServices
             db = new AppDbContext();
         }
 
-<<<<<<< HEAD
-        /// <summary>
-        /// Для тестирования
-        /// </summary>
-        /// <param name="dbContext"></param>
-        public WorkingWithUsers(AppDbContext dbContext)
-=======
         // Для тестирования
         public WorkingWithUsers(AppDbContext db)
->>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
         {
             this.db = db;
         }
@@ -61,24 +52,22 @@ namespace branch_for_registration_1.UsersServices
             }
         }
 
+        // Нет поля db
         public Role GetOrCreateWorkerRole()
         {
-            // Ищем роль Worker в базе
-            var workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker"); ;
-
-            // Если роли Worker нет, создаём их
-            if (workerRole == null)
+            using (var db = new AppDbContext())
             {
-                // Создаём новую роль
-                Role newRole = new Role { Id = Guid.NewGuid(), Title = "Worker" };
-                db.Roles.Add(newRole);
-                db.SaveChanges(); // сохраняем отдельно
-
-                // Получаем созданную роль
-                workerRole = db.Roles.First(r => r.Title == "Worker");
+                var workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker");
+                if (workerRole == null)
+                {
+                    workerRole = new Role { Id = Guid.NewGuid(), Title = "Worker" };
+                    db.Roles.Add(workerRole);
+                    db.SaveChanges();
+                }
+                return workerRole;
             }
-            return workerRole;
         }
+        // Dispose не нужен, так как нет поля db
 
         /// <summary>
         /// Добавляет нового пользователя с ролью Worker
@@ -143,7 +132,6 @@ namespace branch_for_registration_1.UsersServices
             db.Entry(user).Reference(u => u.Role).Load();
             return user.Role?.Title;
         }
-<<<<<<< HEAD
 
         /// <summary>
         /// Возвращает всех пользователей с их ролями
@@ -194,9 +182,6 @@ namespace branch_for_registration_1.UsersServices
             return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
         }
 
-=======
-        
->>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
         /// <summary>
         /// Освобождает ресурсы контекста базы данных (без этого метода компилятор выдает ошибку, что не осуществлен метод Dispose, поэтому написал)
         /// </summary>

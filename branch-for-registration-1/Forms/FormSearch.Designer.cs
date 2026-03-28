@@ -72,6 +72,7 @@
             this.btnSearch.TabIndex = 5;
             this.btnSearch.Text = "Поиск";
             this.btnSearch.UseVisualStyleBackColor = false;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // labelTextVisualSearch
             // 

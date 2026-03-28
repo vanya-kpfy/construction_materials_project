@@ -72,7 +72,7 @@ namespace branch_for_registration_1.Forms
         /// <param name="e"></param>
         private void buttonRegister_Click(object sender, EventArgs e)
         {
-            FormRegister regForm = new FormRegister();
+            var regForm = new FormRegister();
             regForm.ShowDialog(); // после закрытия возвращаемся сюда
         }
 
@@ -82,7 +82,6 @@ namespace branch_for_registration_1.Forms
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            userService.Dispose();
             base.OnFormClosing(e);
         }
     }

@@ -262,6 +262,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -284,11 +285,11 @@
     <Compile Include="Classes\ShipmentItem.cs" />
     <Compile Include="Classes\User.cs" />
     <Compile Include="DataBase\ContextDB.cs" />
-    <Compile Include="Forms\FormAddCategory.cs">
+    <Compile Include="Forms\FormEditCategory.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\FormAddCategory.Designer.cs">
-      <DependentUpon>FormAddCategory.cs</DependentUpon>
+    <Compile Include="Forms\FormEditCategory.Designer.cs">
+      <DependentUpon>FormEditCategory.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormAddProduct.cs">
       <SubType>Form</SubType>
@@ -301,12 +302,6 @@
     </Compile>
     <Compile Include="Forms\FormAdmin.Designer.cs">
       <DependentUpon>FormAdmin.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormEditCategory.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormEditCategory.Designer.cs">
-      <DependentUpon>FormEditCategory.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormEditProduct.cs">
       <SubType>Form</SubType>
@@ -345,9 +340,19 @@
       <DependentUpon>FormShipment.cs</DependentUpon>
     </Compile>
     <Compile Include="HeshSHA256\HashHelper.cs" />
+    <Compile Include="Migrations\20260328033850_AddAddressFieldsToShipment.cs" />
+    <Compile Include="Migrations\20260328033850_AddAddressFieldsToShipment.Designer.cs">
+      <DependentUpon>20260328033850_AddAddressFieldsToShipment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\AppDbContextModelSnapshot.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
@@ -356,12 +361,19 @@
     <Compile Include="UsersServices\ProductService.cs" />
     <Compile Include="UsersServices\ShipmentService.cs" />
     <Compile Include="UsersServices\WorkingWithUsers.cs" />
+    <Compile Include="ValidationTextBox\LanguageHelper.cs" />
     <Compile Include="ValidationTextBox\ValidationHelper.cs" />
+    <EmbeddedResource Include="Forms\FormEditCategory.resx">
+      <DependentUpon>FormEditCategory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAddProduct.resx">
       <DependentUpon>FormAddProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormAdmin.resx">
       <DependentUpon>FormAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEditProduct.resx">
+      <DependentUpon>FormEditProduct.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormLogin.resx">
       <DependentUpon>FormLogin.cs</DependentUpon>
@@ -379,6 +391,11 @@
       <DependentUpon>FormShipment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Resources.en.resx" />
+    <EmbeddedResource Include="Resources\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
@@ -411,6 +428,8 @@
     <Content Include="Images\FonDB.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

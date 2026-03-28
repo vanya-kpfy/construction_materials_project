@@ -19,12 +19,6 @@ namespace branch_for_registration_1.UsersServices
             db = new AppDbContext();
         }
 
-<<<<<<< HEAD
-        /// <summary>
-        /// Возвращает все товары с категориями, отсортированные по названию
-        /// </summary>
-        /// <returns></returns>
-=======
         // Для тестирования
         public ProductService(AppDbContext db)
         {
@@ -32,7 +26,6 @@ namespace branch_for_registration_1.UsersServices
         }
 
         // Получить все товары с категориями (для DataGridView)
->>>>>>> 50a9d84cf56fe235c81484434719075b5e1ac49a
         public List<Product> GetAllProducts()
         {
             return db.Products.Include(p => p.Category).OrderBy(p => p.Name).ToList();

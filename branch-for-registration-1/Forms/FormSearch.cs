@@ -5,13 +5,15 @@ using System.Windows.Forms;
 
 namespace branch_for_registration_1.Forms
 {
+
     /// <summary>
     /// Форма для расширенного поиска товаров (по артикулу, названию, категории)
     /// </summary>
     public partial class FormSearch : Form
     {
-        private CategoryService categoryService;
 
+        private CategoryService categoryService;
+        private ProductService productService;
         /// <summary>
         /// Артикул (часть) для поиска
         /// </summary>
@@ -27,16 +29,18 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         public Guid? CategoryId { get; private set; }
 
-        public FormSearch()
+        public FormSearch(ProductService productService)
         {
+            this.productService = productService ?? 
+                throw new ArgumentNullException(nameof(productService));
             InitializeComponent();
+
             categoryService = new CategoryService();
             LoadCategories();
 
             ValidationHelper.DisableSpaceAndEnter(txtArticle);
             ValidationHelper.DisableSpaceAndEnter(txtName);
         }
-
         private void LoadCategories()
         {
             var categories = categoryService.GetAllCategories();
@@ -44,22 +48,6 @@ namespace branch_for_registration_1.Forms
             cbCategory.DisplayMember = "Name";
             cbCategory.ValueMember = "Id";
             cbCategory.SelectedIndex = -1; // ничего не выбрано
-        }
-
-        private void btnSearch_Click(object sender, EventArgs e)
-        {
-            Article = txtArticle.Text.Trim();
-            ProductName = txtName.Text.Trim();
-            if (cbCategory.SelectedValue != null && cbCategory.SelectedValue is Guid id)
-            {
-                CategoryId = id;
-            }
-            else
-            {
-                CategoryId = null;
-            }
-            DialogResult = DialogResult.OK;
-            Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -70,8 +58,23 @@ namespace branch_for_registration_1.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            categoryService.Dispose();
             base.OnFormClosing(e);
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            Article = txtArticle.Text.Trim();
+            ProductName = txtName.Text.Trim();
+            CategoryId = cbCategory.SelectedValue as Guid?;
+
+            // Выполняем поиск через сервис
+            var products = productService.SearchProductsAdvanced(Article, ProductName, CategoryId);
+
+            // Передаём результаты в главную форму через статическое свойство
+            FormMain.LastSearchResults = products;
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

@@ -115,7 +115,6 @@ namespace branch_for_registration_1.Forms
         /// <param name="e"></param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            userService.Dispose();
             base.OnFormClosing(e);
         }
 
