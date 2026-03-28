@@ -97,7 +97,9 @@ namespace branch_for_registration_1.UsersServices
         public void AddProduct(Product product)
         {
             if (db.Products.Any(p => p.Article == product.Article))
+            {
                 throw new Exception("A product with this article already exists.");
+            }
             product.Id = Guid.NewGuid();
             db.Products.Add(product);
             db.SaveChanges();
@@ -112,9 +114,14 @@ namespace branch_for_registration_1.UsersServices
         {
             var existing = db.Products.Find(product.Id);
             if (existing == null)
+            {
                 throw new Exception("Product not found.");
+            }
+
             if (existing.Article != product.Article && db.Products.Any(p => p.Article == product.Article))
+            {
                 throw new Exception("A product with this article already exists.");
+            }
             db.Entry(existing).CurrentValues.SetValues(product);
             db.SaveChanges();
         }
@@ -127,10 +134,14 @@ namespace branch_for_registration_1.UsersServices
         public void DeleteProduct(Guid id)
         {
             var product = db.Products.Find(id);
+
             if (product == null) return;
             bool inShipments = db.ShipmentItems.Any(si => si.ProductId == id);
+
             if (inShipments)
+            {
                 throw new Exception("Cannot delete a product that is part of a shipment.");
+            }
             db.Products.Remove(product);
             db.SaveChanges();
         }

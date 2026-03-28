@@ -43,8 +43,11 @@ namespace branch_for_registration_1.UsersServices
         /// <exception cref="Exception"></exception>
         public void AddCategory(string name)
         {
-            if (db.Categories.Any(c => c.Name == name))///
+            if (db.Categories.Any(c => c.Name == name))
+            {
                 throw new Exception("A category with this name already exists.");
+            }
+
             db.Categories.Add(new Category { Id = Guid.NewGuid(), Name = name });
             db.SaveChanges();
         }
@@ -58,10 +61,16 @@ namespace branch_for_registration_1.UsersServices
         public void UpdateCategory(Guid id, string newName)
         {
             var cat = db.Categories.Find(id);
-            if (cat == null) 
+            if (cat == null)
+            {
                 throw new Exception("Category not found.");
+            }
+
             if (db.Categories.Any(c => c.Name == newName && c.Id != id))
+            {
                 throw new Exception("A category with this name already exists.");
+            }
+
             cat.Name = newName;
             db.SaveChanges();
         }
@@ -76,8 +85,12 @@ namespace branch_for_registration_1.UsersServices
             var cat = db.Categories.Find(id);
             if (cat == null) return;
             bool hasProducts = db.Products.Any(p => p.CategoryId == id);
+
             if (hasProducts)
+            {
                 throw new Exception("Cannot delete a category that contains products.");
+            }
+
             db.Categories.Remove(cat);
             db.SaveChanges();
         }

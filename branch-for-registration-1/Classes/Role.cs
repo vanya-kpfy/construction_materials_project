@@ -12,12 +12,10 @@ namespace branch_for_registration_1.Classes
         /// Уникальный идентификатор роли (GUID)
         /// </summary>
         public Guid Id { get; set; }
-
         /// <summary>
         /// Название роли, например "Admin" или "Worker"
         /// </summary>
         public string Title { get; set; }
-
         /// <summary>
         /// Список пользователей, у которых эта роль.
         /// </summary>

@@ -1,7 +1,5 @@
 ﻿using branch_for_registration_1.UsersServices;
-using branch_for_registration_1.ValidationTextBox;
 using System;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -132,16 +130,24 @@ namespace branch_for_registration_1.Forms
         private void LoadProducts(DataGridView dgv)
         {
             var products = productService.GetAllProducts();   // используем productService
-            dgv.DataSource = products.Select(p => new
+
+            if (dgv != null)
             {
-                p.Id,
-                p.Article,
-                p.Name,
-                Category = p.Category?.Name,
-                p.Unit,
-                p.PurchasePrice,
-                p.CurrentStock
-            }).ToList();
+                dgv.DataSource = products.Select(p => new
+                {
+                    p.Id,
+                    p.Article,
+                    p.Name,
+                    Category = p.Category?.Name,
+                    p.Unit,
+                    p.PurchasePrice,
+                    p.CurrentStock
+                }).ToList();
+            }
+            else
+            {
+                throw new ArgumentException("dgv не найдена");
+            }
         }
 
         private void AddProduct()

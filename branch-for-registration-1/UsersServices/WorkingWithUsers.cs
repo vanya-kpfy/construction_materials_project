@@ -52,23 +52,6 @@ namespace branch_for_registration_1.UsersServices
             }
         }
 
-        // Нет поля db
-        public Role GetOrCreateWorkerRole()
-        {
-            using (var db = new AppDbContext())
-            {
-                var workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker");
-                if (workerRole == null)
-                {
-                    workerRole = new Role { Id = Guid.NewGuid(), Title = "Worker" };
-                    db.Roles.Add(workerRole);
-                    db.SaveChanges();
-                }
-                return workerRole;
-            }
-        }
-        // Dispose не нужен, так как нет поля db
-
         /// <summary>
         /// Добавляет нового пользователя с ролью Worker
         /// </summary>
@@ -79,23 +62,30 @@ namespace branch_for_registration_1.UsersServices
         /// <param name="passwordHash"></param>
         public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
         {
-            var workerRole = GetOrCreateWorkerRole();
+            var workerRole = db.Roles.Single(r => r.Title == "Worker");
 
-            // Создаём объект нового пользователя
-            User newUser = new User
+            if (workerRole != null)
             {
-                Id = Guid.NewGuid(),
-                FirstName = firstName,
-                LastName = lastName,
-                MiddleName = string.IsNullOrEmpty(middleName) ? null : middleName,
-                Email = email,
-                PasswordHash = passwordHash,
-                RoleId = workerRole.Id,
-                IsActive = true
-            };
-            // Добавляем в таблицу и сохраняем
-            db.Users.Add(newUser);
-            db.SaveChanges();
+                // Создаём объект нового пользователя
+                User newUser = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = firstName,
+                    LastName = lastName,
+                    MiddleName = string.IsNullOrEmpty(middleName) ? null : middleName,
+                    Email = email,
+                    PasswordHash = passwordHash,
+                    RoleId = workerRole.Id,
+                    IsActive = true
+                };
+                // Добавляем в таблицу и сохраняем
+                db.Users.Add(newUser);
+                db.SaveChanges();
+            }
+            else
+            {
+                throw new Exception("Роль пользователя не найдена. Проверьте БД");
+            }
         }
 
         /// <summary>

@@ -22,12 +22,7 @@ namespace branch_for_registration_1.Forms
             userService = new WorkingWithUsers();
 
             // Запрет пробелов и Enter на всех текстовых полях
-            ValidationHelper.DisableSpaceAndEnter(textBoxFirstName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxLastName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxMiddleName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
-            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
-            ValidationHelper.DisableSpaceAndEnter(textBoxConfirmPassword);
+            ValidationHelper.DisableSpaceAndEnter(textBoxFirstName, textBoxLastName, textBoxMiddleName, textBoxEmail, textBoxPassword, textBoxConfirmPassword);
         }
 
         /// <summary>

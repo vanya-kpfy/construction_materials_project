@@ -22,8 +22,7 @@ namespace branch_for_registration_1.Forms
             userService = new WorkingWithUsers();
 
             // Применяем запрет пробелов и Enter ко всем текстовым полям
-            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
-            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
+            ValidationHelper.DisableSpaceAndEnter(textBoxEmail, textBoxPassword);
         }
 
         /// <summary>

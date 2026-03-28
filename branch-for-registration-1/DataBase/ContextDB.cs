@@ -1,5 +1,6 @@
 ﻿using branch_for_registration_1.Classes;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace branch_for_registration_1.DataBase
 {
@@ -8,9 +9,6 @@ namespace branch_for_registration_1.DataBase
     /// </summary>
     public class AppDbContext : DbContext
     {
-        // Строка подключения
-        private static string connectionString = "Host=localhost;Port=5432;Database=DB;Username=postgres;Password=JoyCasInoy54345";
-
         /// <summary>
         /// Модель таблицы Ролей
         /// </summary>
@@ -43,14 +41,20 @@ namespace branch_for_registration_1.DataBase
         public AppDbContext()
         { }
 
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(connectionString);
+                if (!optionsBuilder.IsConfigured)
+                {
+                    var connectionString = ConfigurationManager
+                        .ConnectionStrings["DefaultConnection"]
+                        .ConnectionString;
+
+                    optionsBuilder.UseNpgsql(connectionString);
+                }
             }
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Роли
             modelBuilder.Entity<Role>(entity =>

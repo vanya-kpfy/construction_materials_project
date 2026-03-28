@@ -3,7 +3,6 @@ using branch_for_registration_1.UsersServices;
 using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -29,11 +28,7 @@ namespace branch_for_registration_1.Forms
             SetupCartGrid();
 
             // Запрет пробелов и Enter в текстовых полях
-            ValidationHelper.DisableSpaceAndEnter(txtCountry);
-            ValidationHelper.DisableSpaceAndEnter(txtCity);
-            ValidationHelper.DisableSpaceAndEnter(txtRegion);
-            ValidationHelper.DisableSpaceAndEnter(txtStreet);
-            ValidationHelper.DisableSpaceAndEnter(txtBuilding);
+            ValidationHelper.DisableSpaceAndEnter(txtCountry, txtCity, txtRegion, txtStreet, txtBuilding);
         }
 
         private void LoadProducts()

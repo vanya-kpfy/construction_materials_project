@@ -38,8 +38,7 @@ namespace branch_for_registration_1.Forms
             categoryService = new CategoryService();
             LoadCategories();
 
-            ValidationHelper.DisableSpaceAndEnter(txtArticle);
-            ValidationHelper.DisableSpaceAndEnter(txtName);
+            ValidationHelper.DisableSpaceAndEnter(txtArticle, txtName);
         }
         private void LoadCategories()
         {

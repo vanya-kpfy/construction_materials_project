@@ -12,9 +12,12 @@ namespace branch_for_registration_1.ValidationTextBox
         /// Запрещаем ввод пробела и Enter.
         /// </summary>
         /// <param name="textBox">Текстовое поле, к которому применяется запрет</param>
-        public static void DisableSpaceAndEnter(TextBox textBox)
+        public static void DisableSpaceAndEnter(params TextBox[] textBox)
         {
-            textBox.KeyPress += TextBox_KeyPress_NoSpaceNoEnter;
+            foreach (var textBoxIitem in textBox)
+            {
+                textBoxIitem.KeyPress += TextBox_KeyPress_NoSpaceNoEnter;
+            }
         }
 
         // Обработчик события KeyPress
@@ -33,7 +36,9 @@ namespace branch_for_registration_1.ValidationTextBox
         public static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
+            {
                 return false;
+            }
 
             string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
             return Regex.IsMatch(email, pattern);
