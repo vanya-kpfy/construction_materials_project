@@ -9,13 +9,11 @@ namespace branch_for_registration_1.ValidationTextBox
     /// </summary>
     public static class LanguageHelper
     {
-        private static ResourceManager resourceManager;
         private static CultureInfo currentCulture;
+        private static ResourceManager resourceManager = Properties.Resources.ResourceManager;
 
         static LanguageHelper()
         {
-            string resourceName = "branch_for_registration_1.Resources.Resources";
-            resourceManager = new ResourceManager(resourceName, typeof(LanguageHelper).Assembly);
             SetLanguage("ru"); // по умолчанию русский
         }
         /// <summary>

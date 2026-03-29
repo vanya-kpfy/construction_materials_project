@@ -1,5 +1,8 @@
 ﻿using branch_for_registration_1.Classes;
 using branch_for_registration_1.DataBase;
+using branch_for_registration_1.DTO;
+using branch_for_registration_1.HeshSHA256;
+using branch_for_registration_1.ValidationTextBox;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,42 +52,6 @@ namespace branch_for_registration_1.UsersServices
                 // Логируем ошибку или показываем сообщение
                 Console.WriteLine($"Error in EmailExists: {ex.Message}");
                 return false;
-            }
-        }
-
-        /// <summary>
-        /// Добавляет нового пользователя с ролью Worker
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="middleName"></param>
-        /// <param name="email"></param>
-        /// <param name="passwordHash"></param>
-        public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
-        {
-            var workerRole = db.Roles.Single(r => r.Title == "Worker");
-
-            if (workerRole != null)
-            {
-                // Создаём объект нового пользователя
-                User newUser = new User
-                {
-                    Id = Guid.NewGuid(),
-                    FirstName = firstName,
-                    LastName = lastName,
-                    MiddleName = string.IsNullOrEmpty(middleName) ? null : middleName,
-                    Email = email,
-                    PasswordHash = passwordHash,
-                    RoleId = workerRole.Id,
-                    IsActive = true
-                };
-                // Добавляем в таблицу и сохраняем
-                db.Users.Add(newUser);
-                db.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Роль пользователя не найдена. Проверьте БД");
             }
         }
 
@@ -170,6 +137,49 @@ namespace branch_for_registration_1.UsersServices
         public User GetUserByEmail(string email)
         {
             return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+        }
+
+        private Guid GetDefaultRoleId()
+        {
+            var role = db.Roles.FirstOrDefault(r => r.Title == "Worker");
+
+            if (role is null)
+            {
+                throw new Exception("RoleNotFound");
+            }
+
+            return role.Id;
+        }
+
+        /// <summary>
+        /// Метод, который создает пользователя
+        /// </summary>
+        /// <param name="request"></param>
+        /// <exception cref="Exception"></exception>
+        public void Register(RegisterRequest request)
+        {
+            ValidationHelper.ValidateRegisterRequest(request);
+
+            if (db.Users.Any(x => x.Email.ToLower() == request.Email.ToLower()))
+            {
+                throw new Exception("EmailExists");
+            }
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                MiddleName = request.MiddleName,
+                Email = request.Email,
+                PasswordHash = HashHelper.GetHash(request.Password),
+                RoleId = GetDefaultRoleId(),
+                IsActive = true
+            };
+
+
+            db.Users.Add(user);
+            db.SaveChanges();
         }
 
         /// <summary>

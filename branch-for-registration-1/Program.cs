@@ -27,6 +27,8 @@ namespace branch_for_registration_1
                     db.Roles.Add(new Role { Title = "Worker" });
                 }
 
+               
+
                 db.SaveChanges();
             }
             Application.EnableVisualStyles();

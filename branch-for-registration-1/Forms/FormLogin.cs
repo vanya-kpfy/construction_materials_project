@@ -37,13 +37,13 @@ namespace branch_for_registration_1.Forms
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Please enter email and password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("FillFieldsForAuth"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!email.Contains("@") || !email.Contains("."))
             {
-                MessageBox.Show("Please enter a valid email address (must contain '@' and a dot).","Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("InvalidEmail"),"Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -52,7 +52,7 @@ namespace branch_for_registration_1.Forms
 
             if (role != null)
             {
-                MessageBox.Show($"Welcome, {role}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), role), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 FormMain mainForm = new FormMain(email, role);
                 mainForm.Show();
@@ -60,7 +60,7 @@ namespace branch_for_registration_1.Forms
             }
             else
             {
-                MessageBox.Show("Invalid email or password, or account is blocked.","Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageHelper.GetString("LoginFailed"),"Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

@@ -120,6 +120,7 @@ namespace branch_for_registration_1.Forms
                 BackgroundColor = Color.Gray,
                 CellBorderStyle = DataGridViewCellBorderStyle.None
             };
+            dgvProducts = dgv;
             LoadProducts(dgv);
 
             pnlContent.Controls.Add(topBar);
@@ -129,25 +130,10 @@ namespace branch_for_registration_1.Forms
 
         private void LoadProducts(DataGridView dgv)
         {
-            var products = productService.GetAllProducts();   // используем productService
-
-            if (dgv != null)
-            {
-                dgv.DataSource = products.Select(p => new
-                {
-                    p.Id,
-                    p.Article,
-                    p.Name,
-                    Category = p.Category?.Name,
-                    p.Unit,
-                    p.PurchasePrice,
-                    p.CurrentStock
-                }).ToList();
-            }
-            else
-            {
+            if (dgv == null)
                 throw new ArgumentException("dgv не найдена");
-            }
+
+            dgv.DataSource = productService.GetProducts();
         }
 
         private void AddProduct()
@@ -156,7 +142,7 @@ namespace branch_for_registration_1.Forms
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    productService.AddProduct(form.CreatedProduct);
+                    productService.CreateProduct(form.CreatedProduct);
                     LoadProducts(currentSection as DataGridView);
                 }
             }
@@ -166,8 +152,11 @@ namespace branch_for_registration_1.Forms
         {
             var dgv = currentSection as DataGridView;
             if (dgv?.CurrentRow == null) return;
+
             Guid id = (Guid)dgv.CurrentRow.Cells["Id"].Value;
+
             var product = productService.GetProductById(id);
+
             using (var form = new FormEditProduct(product))
             {
                 if (form.ShowDialog() == DialogResult.OK)
@@ -246,6 +235,7 @@ namespace branch_for_registration_1.Forms
         private void LoadShipments(DataGridView dgvShipments, DataGridView dgvItems)
         {
             var shipments = shipmentService.GetAllShipments();
+
             dgvShipments.DataSource = shipments.Select(s => new
             {
                 s.Id,
@@ -253,11 +243,21 @@ namespace branch_for_registration_1.Forms
                 Destination = $"{s.Country}, {s.City}, {s.Street}, {s.Building}",
                 s.ShipmentDate
             }).ToList();
-            if (dgvShipments.Rows.Count > 0)
+
+            dgvShipments.SelectionChanged += (s, e) =>
             {
-                dgvShipments.CurrentCell = dgvShipments.Rows[0].Cells[0];
-                LoadShipmentItems((Guid)dgvShipments.Rows[0].Cells["Id"].Value, dgvItems);
-            }
+                if (dgvShipments.CurrentRow == null) return;
+
+                Guid id = (Guid)dgvShipments.CurrentRow.Cells["Id"].Value;
+
+                var shipment = shipments.FirstOrDefault(x => x.Id == id);
+
+                dgvItems.DataSource = shipment?.ShipmentItems.Select(i => new
+                {
+                    Product = i.Product?.Name,
+                    i.Quantity
+                }).ToList();
+            };
         }
 
         private void LoadShipmentItems(Guid shipmentId, DataGridView dgvItems)

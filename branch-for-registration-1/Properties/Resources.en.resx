@@ -153,9 +153,6 @@
   <data name="AddProduct" xml:space="preserve">
     <value>Add Product</value>
   </data>
-  <data name="Quantity" xml:space="preserve">
-    <value>Quantity</value>
-  </data>
   <data name="Building" xml:space="preserve">
     <value>Building</value>
   </data>
@@ -166,7 +163,7 @@
     <value>Region</value>
   </data>
   <data name="City" xml:space="preserve">
-    <value> City</value>
+    <value>City</value>
   </data>
   <data name="Country" xml:space="preserve">
     <value>Country</value>
@@ -302,5 +299,26 @@
   </data>
   <data name="ShipmentError" xml:space="preserve">
     <value>Error: {0}</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Product not found</value>
+  </data>
+  <data name="QuantityZero" xml:space="preserve">
+    <value>Quantity must be greater than 0.</value>
+  </data>
+  <data name="NotEnoughStock" xml:space="preserve">
+    <value>Not enough stock. Available: {0}</value>
+  </data>
+  <data name="TotalExceedsStock" xml:space="preserve">
+    <value>Total exceeds stock: {0}</value>
+  </data>
+  <data name="RequiredFields" xml:space="preserve">
+    <value>Fill required fields!</value>
+  </data>
+  <data name="FillFieldsForAuth" xml:space="preserve">
+    <value>Enter email and password!</value>
+  </data>
+  <data name="FillFieldsForRegister" xml:space="preserve">
+    <value>Please fill in first name, last name, email and password!</value>
   </data>
 </root>

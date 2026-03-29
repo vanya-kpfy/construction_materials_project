@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using branch_for_registration_1.ValidationTextBox;
+using branch_for_registration_1.DTO;
 
 namespace branch_for_registration_1.Forms
 {
@@ -19,7 +20,7 @@ namespace branch_for_registration_1.Forms
         private CategoryService categoryService;
         private ProductService productService;
         private Guid currentUserId;
-        public static List<Product> LastSearchResults { get; set; }
+        public static List<ProductDto> LastSearchResults { get; set; }
 
         // Словарь для быстрого поиска ID категории по названию (остаётся)
         private Dictionary<string, Guid> categoryIds;
@@ -157,14 +158,14 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         private void LoadAllProducts()
         {
-            var products = productService.GetAllProducts();
+            var products = productService.GetProducts();
             FillProductGrid(products);
         }
 
         /// <summary>
         /// Заполняет таблицу товаров
         /// </summary>
-        private void FillProductGrid(List<Product> products)
+        private void FillProductGrid(List<ProductDto> products)
         {
             dgvProducts.Rows.Clear();
             dgvProducts.Columns.Clear();
@@ -178,7 +179,7 @@ namespace branch_for_registration_1.Forms
 
             foreach (var p in products)
             {
-                dgvProducts.Rows.Add(p.Article,p.Name,p.Category?.Name,p.Unit,p.PurchasePrice.ToString("F2"),p.CurrentStock);
+                dgvProducts.Rows.Add(p.Article,p.Name,p.CategoryName,p.Unit,p.PurchasePrice.ToString("F2"),p.CurrentStock);
             }
 
             // Настройка ширины колонок

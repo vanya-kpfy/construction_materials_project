@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using branch_for_registration_1.DTO;
+using System;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace branch_for_registration_1.ValidationTextBox
@@ -40,8 +42,41 @@ namespace branch_for_registration_1.ValidationTextBox
                 return false;
             }
 
-            string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-            return Regex.IsMatch(email, pattern);
+            if (email.Contains("@"))
+            {
+                string pattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+                return Regex.IsMatch(email, pattern);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Метод, который проверяет введенные поля при регистрации пользователя
+        /// </summary>
+        /// <param name="request"></param>
+        /// <exception cref="Exception"></exception>
+        public static void ValidateRegisterRequest(RegisterRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.FirstName) || string.IsNullOrWhiteSpace(request.LastName) ||
+                string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            {
+                throw new Exception("FillFieldsForRegister");
+            }
+
+            if (!IsValidEmail(request.Email))
+            {
+                throw new Exception("InvalidEmail");
+            }
+
+            if (request.Password.Length < 3)
+            {
+                throw new Exception("PasswordTooShort");
+            }
+
+            if (request.Password != request.ConfirmPassword)
+            {
+                throw new Exception("PasswordsDoNotMatch");
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using branch_for_registration_1.Classes;
+using branch_for_registration_1.DTO;
 using branch_for_registration_1.UsersServices;
 using branch_for_registration_1.ValidationTextBox;
 using System;
@@ -13,12 +14,12 @@ namespace branch_for_registration_1.Forms
         private Guid userId;
         private ProductService productService = new ProductService();
         private ShipmentService shipmentService = new ShipmentService();
-        private List<ShipmentItem> cart = new List<ShipmentItem>();
+        private List<CartItemDto> cart = new List<CartItemDto>();
 
         public FormShipment(Guid currentUserId)
         {
             InitializeComponent();
-            this.Text = "Create Shipment";
+            this.Text = LanguageHelper.GetString("CreateShipment");
             this.StartPosition = FormStartPosition.CenterParent;
             this.Size = new System.Drawing.Size(550, 550);
 
@@ -33,7 +34,8 @@ namespace branch_for_registration_1.Forms
 
         private void LoadProducts()
         {
-            var products = productService.GetAllProducts();
+            var products = productService.GetProducts();
+
             cbProduct.DataSource = products;
             cbProduct.DisplayMember = "Name";
             cbProduct.ValueMember = "Id";
@@ -50,9 +52,10 @@ namespace branch_for_registration_1.Forms
         private void RefreshCart()
         {
             dgvCart.Rows.Clear();
+
             foreach (var item in cart)
             {
-                dgvCart.Rows.Add(item.Product?.Name, item.Quantity);
+                dgvCart.Rows.Add(item.ProductName, item.Quantity);
             }
         }
 
@@ -60,43 +63,50 @@ namespace branch_for_registration_1.Forms
         {
             if (cbProduct.SelectedItem == null) return;
 
-            var product = cbProduct.SelectedItem as Product;
+            var product = cbProduct.SelectedItem as ProductDto;
+
+            if (product is null)
+            {
+                MessageBox.Show(LanguageHelper.GetString("ProductNotFound"));
+                return;
+            }
             int quantity = (int)nudQuantity.Value;
 
             if (quantity <= 0)
             {
-                MessageBox.Show("Quantity must be greater than 0.", "Warning",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("QuantityZero"));
                 return;
             }
+
             if (quantity > product.CurrentStock)
             {
-                MessageBox.Show($"Not enough stock. Available: {product.CurrentStock}", "Warning",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(string.Format(LanguageHelper.GetString("NotEnoughStock"), product.CurrentStock));
                 return;
             }
 
             var existing = cart.FirstOrDefault(i => i.ProductId == product.Id);
+
             if (existing != null)
             {
                 if (existing.Quantity + quantity > product.CurrentStock)
                 {
-                    MessageBox.Show($"Total quantity would exceed stock. Available: {product.CurrentStock}", "Warning",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(string.Format(LanguageHelper.GetString("TotalExceedsStock"), product.CurrentStock));
                     return;
                 }
+
                 existing.Quantity += quantity;
             }
             else
             {
-                cart.Add(new ShipmentItem
+                cart.Add(new CartItemDto
                 {
-                    Id = Guid.NewGuid(),
                     ProductId = product.Id,
+                    ProductName = product.Name,
                     Quantity = quantity,
-                    Product = product
+                    Stock = product.CurrentStock
                 });
             }
+
             RefreshCart();
         }
 
@@ -110,21 +120,30 @@ namespace branch_for_registration_1.Forms
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
-            // Проверяем заполнение адреса
-            if (string.IsNullOrWhiteSpace(txtCountry.Text) || string.IsNullOrWhiteSpace(txtCity.Text) || string.IsNullOrWhiteSpace(txtStreet.Text) || string.IsNullOrWhiteSpace(txtBuilding.Text))
+            if (string.IsNullOrWhiteSpace(txtCountry.Text) ||
+                string.IsNullOrWhiteSpace(txtCity.Text) ||
+                string.IsNullOrWhiteSpace(txtStreet.Text) ||
+                string.IsNullOrWhiteSpace(txtBuilding.Text))
             {
-                MessageBox.Show("Please fill in Country, City, Street and Building.", "Error",MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("RequiredFields"));
                 return;
             }
 
             if (cart.Count == 0)
             {
-                MessageBox.Show("Please add at least one product.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("NoProducts"));
                 return;
             }
 
             try
             {
+                var shipmentItems = cart.Select(c => new ShipmentItem
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = c.ProductId,
+                    Quantity = c.Quantity
+                }).ToList();
+
                 shipmentService.CreateShipment(
                     userId,
                     txtCountry.Text.Trim(),
@@ -132,14 +151,15 @@ namespace branch_for_registration_1.Forms
                     txtRegion.Text.Trim(),
                     txtStreet.Text.Trim(),
                     txtBuilding.Text.Trim(),
-                    cart
+                    shipmentItems
                 );
-                MessageBox.Show("Shipment created successfully!", "Success",MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                MessageBox.Show(LanguageHelper.GetString("ShipmentCreated"));
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error",MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message);
             }
         }
 

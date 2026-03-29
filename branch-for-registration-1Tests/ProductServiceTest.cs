@@ -30,7 +30,7 @@ namespace branch_for_registration_1Tests
             // Arrange
             contextHelper.AddProductAndCategory_ForTest("Brick", "Сement", "Paperboard");
             // Act
-            var listProduct = productService.GetAllProducts();
+            var listProduct = productService.GetProducts();
 
             // Accert
             Assert.AreEqual(3, listProduct.Count);
@@ -45,7 +45,7 @@ namespace branch_for_registration_1Tests
             // Arrange
 
             // Act
-            var listProduct = productService.GetAllProducts();
+            var listProduct = productService.GetProducts();
 
             // Accert
             Assert.AreEqual(0,listProduct.Count);
