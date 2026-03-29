@@ -1,11 +1,11 @@
 ﻿using branch_for_registration_1.Classes;
+using branch_for_registration_1.DTO;
 using branch_for_registration_1.UsersServices;
+using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using branch_for_registration_1.ValidationTextBox;
-using branch_for_registration_1.DTO;
 
 namespace branch_for_registration_1.Forms
 {
@@ -14,32 +14,25 @@ namespace branch_for_registration_1.Forms
     /// </summary>
     public partial class FormMain : Form
     {
-        private string userEmail;
-        private string userRole;
+        private User currentUser;
         private WorkingWithUsers userService;
         private CategoryService categoryService;
         private ProductService productService;
-        private Guid currentUserId;
         public static List<ProductDto> LastSearchResults { get; set; }
 
         // Словарь для быстрого поиска ID категории по названию (остаётся)
         private Dictionary<string, Guid> categoryIds;
 
-        public FormMain(string email, string role)
+        public FormMain(User user)
         {
             InitializeComponent();
-
-            userEmail = email;
-            userRole = role;
+            currentUser = user;
             userService = new WorkingWithUsers();
             categoryService = new CategoryService();
             productService = new ProductService();
 
-            var user = userService.GetUserByEmail(email);
-            currentUserId = user?.Id ?? Guid.Empty;
-
             // Показываем кнопку админа только для администратора
-            buttonAdmin.Visible = (role == "Admin");
+            buttonAdmin.Visible = currentUser.Role.Title == "Admin";
 
             // Настраиваем внешний вид таблицы
             SetupDataGridViewStyle();
@@ -135,7 +128,7 @@ namespace branch_for_registration_1.Forms
 
             buttonShipment.Click += (s, e) =>
             {
-                var shipmentForm = new FormShipment(currentUserId);
+                var shipmentForm = new FormShipment(currentUser.Id);
                 shipmentForm.ShowDialog();
                 LoadAllProducts(); // обновляем остатки
             };

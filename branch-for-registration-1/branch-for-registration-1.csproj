@@ -123,12 +123,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\Category.cs" />
-    <Compile Include="Classes\Product.cs" />
-    <Compile Include="Classes\Role.cs" />
-    <Compile Include="Classes\Shipment.cs" />
-    <Compile Include="Classes\ShipmentItem.cs" />
-    <Compile Include="Classes\User.cs" />
+    <Compile Include="DataBase\Models\Category.cs" />
+    <Compile Include="DataBase\Models\Product.cs" />
+    <Compile Include="DataBase\Models\Role.cs" />
+    <Compile Include="DataBase\Models\Shipment.cs" />
+    <Compile Include="DataBase\Models\ShipmentItem.cs" />
+    <Compile Include="DataBase\Models\User.cs" />
     <Compile Include="DataBase\ContextDB.cs" />
     <Compile Include="DTO\CardItemDto.cs" />
     <Compile Include="DTO\ProductDto.cs" />
@@ -252,6 +252,9 @@
     <Content Include="Resources\Fon %284%29.png" />
     <Content Include="Resources\Fon.png" />
     <Content Include="Resources\FonDB.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

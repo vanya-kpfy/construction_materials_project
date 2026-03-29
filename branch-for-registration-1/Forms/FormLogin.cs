@@ -32,7 +32,7 @@ namespace branch_for_registration_1.Forms
         /// <param name="e"></param>
         private void buttonLogin_Click(object sender, EventArgs e)
         {
-            var email = textBoxEmail.Text.Trim();
+            var email = textBoxEmail.Text;
             var password = textBoxPassword.Text;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -41,20 +41,19 @@ namespace branch_for_registration_1.Forms
                 return;
             }
 
-            if (!email.Contains("@") || !email.Contains("."))
+            if (!ValidationHelper.IsValidEmail(email))
             {
                 MessageBox.Show(LanguageHelper.GetString("InvalidEmail"),"Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var hash = HashHelper.GetHash(password);
-            var role = userService.ValidateUser(email, hash);
+            var user = userService.ValidateUser(email, password);
 
-            if (role != null)
+            if (user != null)
             {
-                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), role), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), user.Role.Title), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                FormMain mainForm = new FormMain(email, role);
+                var mainForm = new FormMain(user);
                 mainForm.Show();
                 this.Hide();
             }

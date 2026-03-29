@@ -42,52 +42,34 @@ namespace branch_for_registration_1.UsersServices
             {
                 return false;
             }
-            try
-            {
-                // Приводим к нижнему регистру для сравнения без учёта регистра
-                return db.Users.Any(u => u.Email.ToLower() == email.ToLower());
-            }
-            catch (Exception ex)
-            {
-                // Логируем ошибку или показываем сообщение
-                Console.WriteLine($"Error in EmailExists: {ex.Message}");
-                return false;
-            }
+
+            var emailToLower = email.Trim().ToLower();
+
+            return db.Users.Any(u => u.Email == emailToLower);
         }
 
         /// <summary>
-        /// Проверяет логин пользователя и возвращает его роль
+        /// Проверяет введенные данные при входе в аккаунт
         /// </summary>
         /// <param name="email"></param>
         /// <param name="passwordHash"></param>
         /// <returns></returns>
-        public string ValidateUser(string email, string passwordHash)
+        public User ValidateUser(string email, string password)
         {
-            var user = db.Users.Include(u => u.Role)
+            var emailToLower = email.Trim().ToLower();
+
+            var user = db.Users
+                .Include(u => u.Role)
                 .FirstOrDefault(u =>
-                    u.Email.ToLower() == email.ToLower() &&
-                    u.PasswordHash == passwordHash &&
+                    u.Email == emailToLower &&
                     u.IsActive);
 
-            if (user == null || user.Role == null)
+            if (user is null || !HashHelper.VerifyPassword(password, user.PasswordHash))
             {
                 return null;
             }
 
-            return user.Role?.Title;
-        }
-
-        public string ValidateUserExplicit(string email, string passwordHash)
-        {
-            // Ищем пользователя с подходящими данными и загружаем его роль
-            User user = db.Users.Where(u => u.Email.ToLower() == email.ToLower() && u.PasswordHash == passwordHash && u.IsActive).FirstOrDefault();
-            if (user == null)
-            {  
-                return null; 
-            }
-            // Явно загружаем связанную роль
-            db.Entry(user).Reference(u => u.Role).Load();
-            return user.Role?.Title;
+            return user;
         }
 
         /// <summary>
@@ -160,7 +142,7 @@ namespace branch_for_registration_1.UsersServices
         {
             ValidationHelper.ValidateRegisterRequest(request);
 
-            if (db.Users.Any(x => x.Email.ToLower() == request.Email.ToLower()))
+            if (EmailExists(request.Email))
             {
                 throw new Exception("EmailExists");
             }
@@ -171,7 +153,7 @@ namespace branch_for_registration_1.UsersServices
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 MiddleName = request.MiddleName,
-                Email = request.Email,
+                Email = request.Email.Trim().ToLower(),
                 PasswordHash = HashHelper.GetHash(request.Password),
                 RoleId = GetDefaultRoleId(),
                 IsActive = true
