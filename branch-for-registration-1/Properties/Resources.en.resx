@@ -321,4 +321,49 @@
   <data name="FillFieldsForRegister" xml:space="preserve">
     <value>Please fill in first name, last name, email and password!</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Issue</value>
+  </data>
+  <data name="CategoryNull" xml:space="preserve">
+    <value>Category not found</value>
+  </data>
+  <data name="CategoryExisted" xml:space="preserve">
+    <value>A category with this name already exists.</value>
+  </data>
+  <data name="CategoryWithProductsForDelete" xml:space="preserve">
+    <value>Cannot delete a category that contains products.</value>
+  </data>
+  <data name="ProductWithSimilarArticle" xml:space="preserve">
+    <value>Product with this article already exists</value>
+  </data>
+  <data name="ProductCannotDeletedInShippment" xml:space="preserve">
+    <value>Cannot delete product used in shipments</value>
+  </data>
+  <data name="ProductWithIdNotFound" xml:space="preserve">
+    <value>Product with ID {0}  not found.</value>
+  </data>
+  <data name="QuantityOfProductNotEnough" xml:space="preserve">
+    <value>Not enough stock for product '{0}'. Available: {1}, requested: {2}.</value>
+  </data>
+  <data name="UnknownIssue" xml:space="preserve">
+    <value>Unknown Issue</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
 </root>

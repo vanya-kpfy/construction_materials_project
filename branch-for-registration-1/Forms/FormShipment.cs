@@ -1,4 +1,5 @@
 ﻿using branch_for_registration_1.Classes;
+using branch_for_registration_1.DataBase.Models;
 using branch_for_registration_1.DTO;
 using branch_for_registration_1.UsersServices;
 using branch_for_registration_1.ValidationTextBox;
@@ -32,9 +33,9 @@ namespace branch_for_registration_1.Forms
             ValidationHelper.DisableSpaceAndEnter(txtCountry, txtCity, txtRegion, txtStreet, txtBuilding);
         }
 
-        private void LoadProducts()
+        private async void LoadProducts()
         {
-            var products = productService.GetProducts();
+            var products = await productService.GetProducts();
 
             cbProduct.DataSource = products;
             cbProduct.DisplayMember = "Name";
@@ -44,8 +45,8 @@ namespace branch_for_registration_1.Forms
         private void SetupCartGrid()
         {
             dgvCart.Columns.Clear();
-            dgvCart.Columns.Add("ProductName", "Product");
-            dgvCart.Columns.Add("Quantity", "Quantity");
+            dgvCart.Columns.Add("ProductName", LanguageHelper.GetString("Product"));
+            dgvCart.Columns.Add("Quantity", LanguageHelper.GetString("Quantity"));
             dgvCart.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
@@ -118,7 +119,7 @@ namespace branch_for_registration_1.Forms
             RefreshCart();
         }
 
-        private void btnCreate_Click(object sender, EventArgs e)
+        private async void btnCreate_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCountry.Text) ||
                 string.IsNullOrWhiteSpace(txtCity.Text) ||
@@ -144,13 +145,19 @@ namespace branch_for_registration_1.Forms
                     Quantity = c.Quantity
                 }).ToList();
 
-                shipmentService.CreateShipment(
+                var address = new Address
+                {
+                    Id = Guid.NewGuid(),
+                    Country = txtCountry.Text.Trim(),
+                    City = txtCity.Text.Trim(),
+                    Region = txtRegion.Text.Trim(),
+                    Street = txtStreet.Text.Trim(),
+                    Building = txtBuilding.Text.Trim()
+                };
+
+                await shipmentService.CreateShipment(
                     userId,
-                    txtCountry.Text.Trim(),
-                    txtCity.Text.Trim(),
-                    txtRegion.Text.Trim(),
-                    txtStreet.Text.Trim(),
-                    txtBuilding.Text.Trim(),
+                    address,
                     shipmentItems
                 );
 
@@ -170,8 +177,6 @@ namespace branch_for_registration_1.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            productService.Dispose();
-            shipmentService.Dispose();
             base.OnFormClosing(e);
         }
     }

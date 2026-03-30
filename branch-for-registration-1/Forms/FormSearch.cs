@@ -40,9 +40,9 @@ namespace branch_for_registration_1.Forms
 
             ValidationHelper.DisableSpaceAndEnter(txtArticle, txtName);
         }
-        private void LoadCategories()
+        private async void LoadCategories()
         {
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             cbCategory.DataSource = categories;
             cbCategory.DisplayMember = "Name";
             cbCategory.ValueMember = "Id";
@@ -60,14 +60,14 @@ namespace branch_for_registration_1.Forms
             base.OnFormClosing(e);
         }
 
-        private void btnSearch_Click(object sender, EventArgs e)
+        private async void btnSearch_Click(object sender, EventArgs e)
         {
             Article = txtArticle.Text.Trim();
             ProductName = txtName.Text.Trim();
             CategoryId = cbCategory.SelectedValue as Guid?;
 
             // Выполняем поиск через сервис
-            var products = productService.SearchProductsAdvanced(Article, ProductName, CategoryId);
+            var products = await productService.SearchProductsAdvanced(Article, ProductName, CategoryId);
 
             // Передаём результаты в главную форму через статическое свойство
             FormMain.LastSearchResults = products;

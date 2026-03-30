@@ -53,10 +53,10 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает соответствие названий категорий и их GUID из базы данных.
         /// </summary>
-        private void LoadCategoryIds()
+        private async void LoadCategoryIds()
         {
             categoryIds = new Dictionary<string, Guid>();
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             foreach (var cat in categories)
             {
                 categoryIds[cat.Name] = cat.Id;
@@ -65,10 +65,10 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Создаёт кнопки для каждой категории и добавляет их в панель.
         /// </summary>
-        private void LoadCategoryButtons()
+        private async void LoadCategoryButtons()
         {
             pnlCategories.Controls.Clear();
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
 
             int y = 5; 
             foreach (var cat in categories)
@@ -96,9 +96,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает товары по ID категории
         /// </summary>
-        private void LoadProductsByCategoryId(Guid categoryId)
+        private async void LoadProductsByCategoryId(Guid categoryId)
         {
-            var products = productService.GetProductsByCategory(categoryId);
+            var products = await productService.GetProductsByCategory(categoryId);
             FillProductGrid(products);
         }
 
@@ -113,14 +113,13 @@ namespace branch_for_registration_1.Forms
                 btnAllProducts.Click += (s, e) => LoadAllProducts();
             }
 
-            buttonSearch.Click += (s, e) =>
+            buttonSearch.Click += async (s, e) =>
             {
                 using (var searchForm = new FormSearch(productService))
                 {
                     if (searchForm.ShowDialog() == DialogResult.OK)
                     {
-                        var products = productService.SearchProductsAdvanced(searchForm.Article,searchForm.ProductName,searchForm.CategoryId
-                        );
+                        var products = await productService.SearchProductsAdvanced(searchForm.Article,searchForm.ProductName,searchForm.CategoryId);
                         FillProductGrid(products);
                     }
                 }
@@ -149,9 +148,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает все товары
         /// </summary>
-        private void LoadAllProducts()
+        private async void LoadAllProducts()
         {
-            var products = productService.GetProducts();
+            var products = await productService.GetProducts();
             FillProductGrid(products);
         }
 
@@ -223,8 +222,6 @@ namespace branch_for_registration_1.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            categoryService.Dispose();
-            productService.Dispose();
             base.OnFormClosing(e);
         }
     }

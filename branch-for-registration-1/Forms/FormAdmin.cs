@@ -1,4 +1,5 @@
 ﻿using branch_for_registration_1.UsersServices;
+using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Drawing;
 using System.Linq;
@@ -16,9 +17,6 @@ namespace branch_for_registration_1.Forms
         private CategoryService categoryService;
         private ShipmentService shipmentService;
         private DataGridView dgvProducts;
-
-        // Текущий активный раздел (DataGridView или другой контрол)
-        private Control currentSection;
 
         public FormAdmin()
         {
@@ -44,7 +42,6 @@ namespace branch_for_registration_1.Forms
         private void ClearContent()
         {
             pnlContent.Controls.Clear();
-            currentSection = null;
         }
 
         // ------------------- РАЗДЕЛ "СПИСОК РАБОТНИКОВ" -------------------
@@ -62,12 +59,11 @@ namespace branch_for_registration_1.Forms
             };
             LoadUsers(dgv);
             pnlContent.Controls.Add(dgv);
-            currentSection = dgv;
         }
 
-        private void LoadUsers(DataGridView dgv)
+        private async void LoadUsers(DataGridView dgv)
         {
-            var users = userService.GetAllUsers();
+            var users = await userService.GetAllUsers();
             dgv.DataSource = users.Select(u => new
             {
                 u.Id,
@@ -85,103 +81,133 @@ namespace branch_for_registration_1.Forms
         {
             ClearContent();
 
-            // Верхняя панель с кнопками
-            var topBar = new Panel { Dock = DockStyle.Top, Height = 50 };
-            var btnProduct = new Button { Text = "Товар", Location = new Point(10, 10), Size = new Size(100, 30) };
-            var btnCategory = new Button { Text = "Категория", Location = new Point(120, 10), Size = new Size(100, 30) };
-            topBar.Controls.Add(btnProduct);
-            topBar.Controls.Add(btnCategory);
+            var topPanel = new Panel();
+            topPanel.Dock = DockStyle.Top;
+            topPanel.Height = 50;
 
-            // Контекстное меню для кнопки "Товар"
-            var productMenu = new ContextMenuStrip();
-            productMenu.Items.Add("Добавить", null, (s, e) => AddProduct());
-            productMenu.Items.Add("Редактировать", null, (s, e) => EditProduct());
-            productMenu.Items.Add("Удалить", null, (s, e) => DeleteProduct());
-            btnProduct.Click += (s, e) => productMenu.Show(btnProduct, new Point(0, btnProduct.Height));
+            var btnProduct = new Button();
+            btnProduct.Text = LanguageHelper.GetString("Product");
+            btnProduct.Location = new Point(10, 10);
+            btnProduct.Size = new Size(100, 30);
 
-            // Кнопка "Категория" открывает форму управления категориями
+            var btnCategory = new Button();
+            btnCategory.Text = LanguageHelper.GetString("Category");
+            btnCategory.Location = new Point(120, 10);
+            btnCategory.Size = new Size(100, 30);
+
+            topPanel.Controls.Add(btnProduct);
+            topPanel.Controls.Add(btnCategory);
+
+            dgvProducts = new DataGridView();
+            dgvProducts.Dock = DockStyle.Fill;
+            dgvProducts.ReadOnly = true;
+            dgvProducts.RowHeadersVisible = false;
+
+            LoadProducts(dgvProducts);
+
+            pnlContent.Controls.Add(dgvProducts);
+            pnlContent.Controls.Add(topPanel);
+
+            var menu = new ContextMenuStrip();
+            menu.Items.Add(LanguageHelper.GetString("Add"), null, (s, e) => AddProduct());
+            menu.Items.Add(LanguageHelper.GetString("Edit"), null, (s, e) => EditProduct());
+            menu.Items.Add(LanguageHelper.GetString("Delete"), null, (s, e) => DeleteProduct());
+
+            btnProduct.Click += (s, e) =>
+            {
+                menu.Show(btnProduct, new Point(0, btnProduct.Height));
+            };
+
+            // Категория
             btnCategory.Click += (s, e) =>
             {
                 using (var form = new FormEditCategory(Guid.Empty, ""))
                 {
                     form.ShowDialog();
-                    // После закрытия обновляем таблицу товаров (категории могли измениться)
                     LoadProducts(dgvProducts);
                 }
             };
-
-            // Таблица товаров
-            var dgv = new DataGridView
-            {
-                Dock = DockStyle.Fill,
-                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                ReadOnly = true,
-                RowHeadersVisible = false,
-                BackgroundColor = Color.Gray,
-                CellBorderStyle = DataGridViewCellBorderStyle.None
-            };
-            dgvProducts = dgv;
-            LoadProducts(dgv);
-
-            pnlContent.Controls.Add(topBar);
-            pnlContent.Controls.Add(dgv);
-            currentSection = dgv;
         }
 
-        private void LoadProducts(DataGridView dgv)
+        private async void LoadProducts(DataGridView dgv)
         {
-            if (dgv == null)
-                throw new ArgumentException("dgv не найдена");
+            dgv.Columns.Clear();
+            dgv.Rows.Clear();
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgv.Columns.Add("Id", "Id");
+            dgv.Columns["Id"].Visible = false;
 
-            dgv.DataSource = productService.GetProducts();
+            dgv.Columns.Add("Article", LanguageHelper.GetString("Article"));
+            dgv.Columns.Add("Name", LanguageHelper.GetString("Name"));
+            dgv.Columns.Add("Category", LanguageHelper.GetString("Category"));
+            dgv.Columns.Add("Unit", LanguageHelper.GetString("Unit"));
+            dgv.Columns.Add("Price", LanguageHelper.GetString("Price"));
+            dgv.Columns.Add("Stock", LanguageHelper.GetString("Stock"));
+
+            var products = await productService.GetProducts();
+
+            foreach (var p in products)
+            {
+                dgv.Rows.Add(
+                    p.Id,
+                    p.Article,
+                    p.Name,
+                    p.CategoryName,
+                    p.Unit,
+                    p.PurchasePrice,
+                    p.CurrentStock
+                );
+            }
         }
 
-        private void AddProduct()
+        private async void AddProduct()
         {
             using (var form = new FormAddProduct())
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    productService.CreateProduct(form.CreatedProduct);
-                    LoadProducts(currentSection as DataGridView);
+                    await productService.CreateProduct(form.CreatedProduct);
+                    LoadProducts(dgvProducts);
                 }
             }
         }
 
-        private void EditProduct()
+        private async void EditProduct()
         {
-            var dgv = currentSection as DataGridView;
-            if (dgv?.CurrentRow == null) return;
+            var dgv = dgvProducts;
+            if (dgv.CurrentRow == null) return;
 
             Guid id = (Guid)dgv.CurrentRow.Cells["Id"].Value;
 
-            var product = productService.GetProductById(id);
+            var product = await productService.GetProductById(id);
 
             using (var form = new FormEditProduct(product))
             {
                 if (form.ShowDialog() == DialogResult.OK)
                 {
-                    productService.UpdateProduct(form.UpdatedProduct);
+                    await productService.UpdateProduct(form.UpdatedProduct);
                     LoadProducts(dgv);
                 }
             }
         }
 
-        private void DeleteProduct()
+        private async void DeleteProduct()
         {
-            var dgv = currentSection as DataGridView;
-            if (dgv?.CurrentRow == null) return;
+            var dgv = dgvProducts;
+            if (dgv.CurrentRow == null) return;
+
             Guid id = (Guid)dgv.CurrentRow.Cells["Id"].Value;
-            if (MessageBox.Show("Удалить этот товар?", "Подтверждение", MessageBoxButtons.YesNo) == DialogResult.Yes)
+
+            if (MessageBox.Show(LanguageHelper.GetString("ConfirmDeleteProduct"), LanguageHelper.GetString("Confirm"), MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
-                    productService.DeleteProduct(id);
+                    await productService.DeleteProduct(id);
                     LoadProducts(dgv);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(ex.Message, LanguageHelper.GetString("Issue"), MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -219,7 +245,6 @@ namespace branch_for_registration_1.Forms
             split.Panel1.Controls.Add(dgvShipments);
             split.Panel2.Controls.Add(dgvItems);
             pnlContent.Controls.Add(split);
-            currentSection = split;
 
             LoadShipments(dgvShipments, dgvItems);
             dgvShipments.SelectionChanged += (s, e) =>
@@ -232,21 +257,30 @@ namespace branch_for_registration_1.Forms
             };
         }
 
-        private void LoadShipments(DataGridView dgvShipments, DataGridView dgvItems)
+        private async void LoadShipments(DataGridView dgvShipments, DataGridView dgvItems)
         {
-            var shipments = shipmentService.GetAllShipments();
+            var shipments = await shipmentService.GetAllShipments();
 
             dgvShipments.DataSource = shipments.Select(s => new
             {
                 s.Id,
                 User = s.User?.Email,
-                Destination = $"{s.Country}, {s.City}, {s.Street}, {s.Building}",
+                Destination = s.Address?.FullAddress,
                 s.ShipmentDate
             }).ToList();
 
+            dgvShipments.Columns["Id"].HeaderText = "Id";
+            dgvShipments.Columns["User"].HeaderText = LanguageHelper.GetString("User");
+            dgvShipments.Columns["Destination"].HeaderText = LanguageHelper.GetString("Address");
+            dgvShipments.Columns["ShipmentDate"].HeaderText = LanguageHelper.GetString("Date");
+
             dgvShipments.SelectionChanged += (s, e) =>
             {
-                if (dgvShipments.CurrentRow == null) return;
+                if (dgvShipments.CurrentRow == null)
+                {
+                    MessageBox.Show(LanguageHelper.GetString("UnknownIssue"));
+                    return;
+                }
 
                 Guid id = (Guid)dgvShipments.CurrentRow.Cells["Id"].Value;
 
@@ -257,25 +291,34 @@ namespace branch_for_registration_1.Forms
                     Product = i.Product?.Name,
                     i.Quantity
                 }).ToList();
+
+                dgvItems.Columns["Product"].HeaderText = LanguageHelper.GetString("Product");
+                dgvItems.Columns["Quantity"].HeaderText = LanguageHelper.GetString("Quantity");
             };
         }
 
-        private void LoadShipmentItems(Guid shipmentId, DataGridView dgvItems)
+        private async void LoadShipmentItems(Guid shipmentId, DataGridView dgvItems)
         {
-            var shipment = shipmentService.GetAllShipments().FirstOrDefault(s => s.Id == shipmentId);
-            dgvItems.DataSource = shipment?.ShipmentItems.Select(i => new
+            try
             {
-                Product = i.Product?.Name,
-                i.Quantity
-            }).ToList();
+                var shipmentListAsync = await shipmentService.GetAllShipments();
+                var shipment = shipmentListAsync.FirstOrDefault(s => s.Id == shipmentId);
+
+                dgvItems.DataSource = shipment?.ShipmentItems.Select(i => new
+                {
+                    Product = i.Product?.Name,
+                    i.Quantity
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(LanguageHelper.GetString(ex.Message));
+            }
         }
 
         // ------------------- Освобождение ресурсов -------------------
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            productService.Dispose();
-            categoryService.Dispose();
-            shipmentService.Dispose();
             base.OnFormClosing(e);
         }
     }

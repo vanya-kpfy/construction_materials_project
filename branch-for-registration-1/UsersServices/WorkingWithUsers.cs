@@ -2,50 +2,37 @@
 using branch_for_registration_1.DataBase;
 using branch_for_registration_1.DTO;
 using branch_for_registration_1.HeshSHA256;
-using branch_for_registration_1.ValidationTextBox;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace branch_for_registration_1.UsersServices
 {
     /// <summary>
     /// Сервис для работы с пользователями: регистрация, вход, проверка email
     /// </summary>
-    public class WorkingWithUsers : IDisposable
+    public class WorkingWithUsers
     {
-        private AppDbContext db;
-
-        /// <summary>
-        /// Конструктор – создаёт подключение к базе данных
-        /// </summary>
-        public WorkingWithUsers()
-        {
-            db = new AppDbContext();
-        }
-
-        // Для тестирования
-        public WorkingWithUsers(AppDbContext db)
-        {
-            this.db = db;
-        }
-
         /// <summary>
         /// Проверяет, занят ли указанный email
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public bool EmailExists(string email)
+        public async Task<bool> EmailExists(string email)
         {
-            if (string.IsNullOrEmpty(email))
+            using (var db = new AppDbContext())
             {
-                return false;
+                if (string.IsNullOrEmpty(email))
+                {
+                    return false;
+                }
+
+                var emailToLower = email.Trim().ToLower();
+
+                return await db.Users.AnyAsync(u => u.Email == emailToLower);
             }
-
-            var emailToLower = email.Trim().ToLower();
-
-            return db.Users.Any(u => u.Email == emailToLower);
         }
 
         /// <summary>
@@ -54,31 +41,35 @@ namespace branch_for_registration_1.UsersServices
         /// <param name="email"></param>
         /// <param name="passwordHash"></param>
         /// <returns></returns>
-        public User ValidateUser(string email, string password)
+        public async Task<User> ValidateUser(string email, string password)
         {
-            var emailToLower = email.Trim().ToLower();
-
-            var user = db.Users
-                .Include(u => u.Role)
-                .FirstOrDefault(u =>
-                    u.Email == emailToLower &&
-                    u.IsActive);
-
-            if (user is null || !HashHelper.VerifyPassword(password, user.PasswordHash))
+            using (var db = new AppDbContext())
             {
-                return null;
-            }
+                var emailToLower = email.Trim().ToLower();
 
-            return user;
+                var user = await db.Users
+                    .Include(u => u.Role)
+                    .FirstOrDefaultAsync(u => u.Email == emailToLower && u.IsActive);
+
+                if (user is null || !HashHelper.VerifyPassword(password, user.PasswordHash))
+                {
+                    return null;
+                }
+
+                return user;
+            }
         }
 
         /// <summary>
         /// Возвращает всех пользователей с их ролями
         /// </summary>
         /// <returns></returns>
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return db.Users.Include(u => u.Role).ToList();
+            using (var db = new AppDbContext())
+            {
+                return await db.Users.Include(u => u.Role).ToListAsync();
+            }
         }
 
         /// <summary>
@@ -86,13 +77,16 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="newRoleId"></param>
-        public void UpdateUserRole(Guid userId, Guid newRoleId)
+        public async Task UpdateUserRole(Guid userId, Guid newRoleId)
         {
-            var user = db.Users.Find(userId);
-            if (user != null)
+            using (var db = new AppDbContext())
             {
-                user.RoleId = newRoleId;
-                db.SaveChanges();
+                var user = await db.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.RoleId = newRoleId;
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
@@ -101,13 +95,16 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="isActive"></param>
-        public void SetUserActive(Guid userId, bool isActive)
+        public async Task SetUserActive(Guid userId, bool isActive)
         {
-            var user = db.Users.Find(userId);
-            if (user != null)
+            using (var db = new AppDbContext())
             {
-                user.IsActive = isActive;
-                db.SaveChanges();
+                var user = await db.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.IsActive = isActive;
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
@@ -116,21 +113,12 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-        }
-
-        private Guid GetDefaultRoleId()
-        {
-            var role = db.Roles.FirstOrDefault(r => r.Title == "Worker");
-
-            if (role is null)
+            using (var db = new AppDbContext())
             {
-                throw new Exception("RoleNotFound");
+                return await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
             }
-
-            return role.Id;
         }
 
         /// <summary>
@@ -138,38 +126,35 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="request"></param>
         /// <exception cref="Exception"></exception>
-        public void Register(RegisterRequest request)
+        public async Task Register(RegisterRequest request)
         {
-            ValidationHelper.ValidateRegisterRequest(request);
-
-            if (EmailExists(request.Email))
+            using (var db = new AppDbContext())
             {
-                throw new Exception("EmailExists");
+                if (await db.Users.AnyAsync(x => x.Email == request.Email))
+                {
+                    throw new Exception("EmailExists");
+                }
+
+                var roleId = await db.Roles
+                    .Where(x => x.Title == "Worker")
+                    .Select(x => x.Id)
+                    .FirstAsync();
+
+                var user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    MiddleName = request.MiddleName,
+                    Email = request.Email.Trim().ToLower(),
+                    PasswordHash = HashHelper.GetHash(request.Password),
+                    RoleId = roleId,
+                    IsActive = true
+                };
+
+                db.Users.Add(user);
+                await db.SaveChangesAsync();
             }
-
-            var user = new User
-            {
-                Id = Guid.NewGuid(),
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                MiddleName = request.MiddleName,
-                Email = request.Email.Trim().ToLower(),
-                PasswordHash = HashHelper.GetHash(request.Password),
-                RoleId = GetDefaultRoleId(),
-                IsActive = true
-            };
-
-
-            db.Users.Add(user);
-            db.SaveChanges();
-        }
-
-        /// <summary>
-        /// Освобождает ресурсы контекста базы данных (без этого метода компилятор выдает ошибку, что не осуществлен метод Dispose, поэтому написал)
-        /// </summary>
-        public void Dispose()
-        {
-            db.Dispose();
         }
     }
 }

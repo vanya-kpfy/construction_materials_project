@@ -321,4 +321,49 @@
   <data name="FillFieldsForRegister" xml:space="preserve">
     <value>Пожалуйста, введите имя, фамилию, адрес электронной почты и пароль!</value>
   </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="Confirm" xml:space="preserve">
+    <value>Подтверждение</value>
+  </data>
+  <data name="Issue" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="CategoryNull" xml:space="preserve">
+    <value>Категория не найдена</value>
+  </data>
+  <data name="CategoryExisted" xml:space="preserve">
+    <value>Категория с таким названием уже существует</value>
+  </data>
+  <data name="CategoryWithProductsForDelete" xml:space="preserve">
+    <value>Невозможно удалить категорию - существуют товары,связанные с ней</value>
+  </data>
+  <data name="ProductWithSimilarArticle" xml:space="preserve">
+    <value>Товар с таким артикулом уже существует</value>
+  </data>
+  <data name="ProductCannotDeletedInShippment" xml:space="preserve">
+    <value>Невозможно удалить продукт, использованный при отгрузке</value>
+  </data>
+  <data name="ProductWithIdNotFound" xml:space="preserve">
+    <value>Продукт с ID {0} не найден</value>
+  </data>
+  <data name="QuantityOfProductNotEnough" xml:space="preserve">
+    <value>Недостаточно товара на складе для "{0}". Доступно: {1}, запрошено: {2}.</value>
+  </data>
+  <data name="UnknownIssue" xml:space="preserve">
+    <value>Неизвестная ошибка!</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
 </root>

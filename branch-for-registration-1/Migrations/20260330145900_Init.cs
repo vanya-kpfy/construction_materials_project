@@ -3,10 +3,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace branch_for_registration_1.Migrations
 {
-    public partial class AddAddressFieldsToShipment : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    Country = table.Column<string>(maxLength: 100, nullable: false),
+                    City = table.Column<string>(maxLength: 100, nullable: false),
+                    Region = table.Column<string>(maxLength: 100, nullable: true),
+                    Street = table.Column<string>(maxLength: 150, nullable: false),
+                    Building = table.Column<string>(maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -85,16 +101,17 @@ namespace branch_for_registration_1.Migrations
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "gen_random_uuid()"),
                     UserId = table.Column<Guid>(nullable: false),
                     ShipmentDate = table.Column<DateTime>(nullable: false),
-                    Destination = table.Column<string>(maxLength: 200, nullable: true),
-                    Country = table.Column<string>(nullable: true),
-                    City = table.Column<string>(nullable: true),
-                    Region = table.Column<string>(nullable: true),
-                    Street = table.Column<string>(nullable: true),
-                    Building = table.Column<string>(nullable: true)
+                    AddressId = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Shipments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Shipments_Addresses_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Addresses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Shipments_Users_UserId",
                         column: x => x.UserId,
@@ -163,6 +180,11 @@ namespace branch_for_registration_1.Migrations
                 column: "ShipmentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Shipments_AddressId",
+                table: "Shipments",
+                column: "AddressId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Shipments_UserId",
                 table: "Shipments",
                 column: "UserId");
@@ -192,6 +214,9 @@ namespace branch_for_registration_1.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Addresses");
 
             migrationBuilder.DropTable(
                 name: "Users");

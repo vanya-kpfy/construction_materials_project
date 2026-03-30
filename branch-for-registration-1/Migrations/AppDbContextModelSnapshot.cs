@@ -106,32 +106,18 @@ namespace branch_for_registration_1.Migrations
                         .HasColumnType("uuid")
                         .HasDefaultValueSql("gen_random_uuid()");
 
-                    b.Property<string>("Building")
-                        .HasColumnType("text");
-
-                    b.Property<string>("City")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Destination")
-                        .HasColumnType("character varying(200)")
-                        .HasMaxLength(200);
-
-                    b.Property<string>("Region")
-                        .HasColumnType("text");
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("ShipmentDate")
                         .HasColumnType("timestamp without time zone");
-
-                    b.Property<string>("Street")
-                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId");
 
                     b.HasIndex("UserId");
 
@@ -212,6 +198,42 @@ namespace branch_for_registration_1.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("branch_for_registration_1.DataBase.Models.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("Building")
+                        .IsRequired()
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Region")
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("character varying(150)")
+                        .HasMaxLength(150);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Addresses");
+                });
+
             modelBuilder.Entity("branch_for_registration_1.Classes.Product", b =>
                 {
                     b.HasOne("branch_for_registration_1.Classes.Category", "Category")
@@ -223,6 +245,12 @@ namespace branch_for_registration_1.Migrations
 
             modelBuilder.Entity("branch_for_registration_1.Classes.Shipment", b =>
                 {
+                    b.HasOne("branch_for_registration_1.DataBase.Models.Address", "Address")
+                        .WithMany()
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("branch_for_registration_1.Classes.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")

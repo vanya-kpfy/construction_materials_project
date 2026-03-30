@@ -1,31 +1,36 @@
 ﻿using branch_for_registration_1.Classes;
 using branch_for_registration_1.DataBase;
+using branch_for_registration_1.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace branch_for_registration_1.UsersServices
 {
     /// <summary>
     /// Сервис для работы с отгрузками
     /// </summary>
-    public class ShipmentService : IDisposable
+    public class ShipmentService
     {
-        private AppDbContext db;
-
-        public ShipmentService()
-        {
-            db = new AppDbContext();
-        }
 
         /// <summary>
         /// Возвращает все отгрузки с пользователями и позициями
         /// </summary>
         /// <returns></returns>
-        public List<Shipment> GetAllShipments()
+        public async Task<List<Shipment>> GetAllShipments()
         {
-            return db.Shipments.Include(s => s.User).Include(s => s.ShipmentItems).ThenInclude(si => si.Product).OrderByDescending(s => s.ShipmentDate).ToList();
+            using (var db = new AppDbContext())
+            {
+                return await db.Shipments.Include(s => s.User)
+                    .Include(s => s.User)
+                    .Include(s => s.Address)
+                    .Include(s => s.ShipmentItems)
+                    .ThenInclude(si => si.Product)
+                    .OrderByDescending(s => s.ShipmentDate)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>
@@ -33,9 +38,12 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public List<Shipment> GetShipmentsByUser(Guid userId)
+        public async Task<List<Shipment>> GetShipmentsByUser(Guid userId)
         {
-            return db.Shipments.Include(s => s.User).Include(s => s.ShipmentItems).ThenInclude(si => si.Product).Where(s => s.UserId == userId).OrderByDescending(s => s.ShipmentDate).ToList();
+            using (var db = new AppDbContext())
+            {
+                return await db.Shipments.Include(s => s.User).Include(s => s.ShipmentItems).ThenInclude(si => si.Product).Where(s => s.UserId == userId).OrderByDescending(s => s.ShipmentDate).ToListAsync();
+            }
         }
 
         /// <summary>
@@ -46,52 +54,56 @@ namespace branch_for_registration_1.UsersServices
         /// <param name="items"></param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public Shipment CreateShipment(Guid userId, string destination, List<ShipmentItem> items)
+        public async Task<Shipment> CreateShipment(Guid userId, Address address, List<ShipmentItem> items)
         {
-            foreach (var item in items)
+            using (var db = new AppDbContext())
             {
-                var product = db.Products.Find(item.ProductId);
-                if (product == null)
-                    throw new Exception($"Product with ID {item.ProductId} not found.");
-                if (product.CurrentStock < item.Quantity)
-                    throw new Exception($"Not enough stock for product '{product.Name}'. Available: {product.CurrentStock}, requested: {item.Quantity}.");
-            }
+                var productIds = items.Select(i => i.ProductId).ToList();
 
-            var shipment = new Shipment
-            {
-                Id = Guid.NewGuid(),
-                UserId = userId,
-                ShipmentDate = DateTime.Now,
-                Destination = destination,
-                ShipmentItems = items.Select(i => new ShipmentItem
+                var products = await db.Products.Where(p => productIds.Contains(p.Id)).ToListAsync();
+
+                foreach (var item in items)
                 {
-                    Id = Guid.NewGuid(),
-                    ProductId = i.ProductId,
-                    Quantity = i.Quantity
-                }).ToList()
-            };
-            db.Shipments.Add(shipment);
+                    var product = products.FirstOrDefault(p => p.Id == item.ProductId);
 
-            foreach (var item in items)
-            {
-                var product = db.Products.Find(item.ProductId);
-                if (product != null)
-                { 
-                    product.CurrentStock -= item.Quantity; 
+                    if (product is null)
+                    {
+                        throw new Exception("ProductWithIdNotFound");
+                    }
+
+                    if (product.CurrentStock < item.Quantity)
+                    {
+                        throw new Exception("QuantityOfProductNotEnough");
+                    }
                 }
+
+                await db.Addresses.AddAsync(address);
+
+
+                var shipment = new Shipment
+                {
+                    UserId = userId,
+                    ShipmentDate = DateTime.Now,
+                    Address = address,
+                    ShipmentItems = items.Select(i => new ShipmentItem
+                    {
+                        ProductId = i.ProductId,
+                        Quantity = i.Quantity
+                    }).ToList()
+                };
+
+                await db.Shipments.AddAsync(shipment);
+
+                foreach (var item in items)
+                {
+                    var product = products.First(p => p.Id == item.ProductId);
+                    product.CurrentStock -= item.Quantity;
+                }
+
+                await db.SaveChangesAsync();
+
+                return shipment;
             }
-            db.SaveChanges();
-            return shipment;
-        }
-
-        public void Dispose()
-        {
-            db.Dispose();
-        }
-
-        internal void CreateShipment(Guid userId, string v1, string v2, string v3, string v4, string v5, List<ShipmentItem> cart)
-        {
-            throw new NotImplementedException();
         }
     }
 }

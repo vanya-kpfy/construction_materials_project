@@ -30,7 +30,7 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonRegister_Click(object sender, EventArgs e)
+        private async void buttonRegister_Click(object sender, EventArgs e)
         {
             var request = new RegisterRequest
             {
@@ -44,9 +44,9 @@ namespace branch_for_registration_1.Forms
 
             try
             {
-                userService.Register(request);
+                await userService.Register(request);
 
-                MessageBox.Show("Success");
+                MessageBox.Show(LanguageHelper.GetString("Success"));
                 this.Close();
             }
             catch (Exception ex)

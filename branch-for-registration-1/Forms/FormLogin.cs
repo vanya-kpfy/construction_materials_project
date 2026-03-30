@@ -30,28 +30,28 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonLogin_Click(object sender, EventArgs e)
+        private async void buttonLogin_Click(object sender, EventArgs e)
         {
             var email = textBoxEmail.Text;
             var password = textBoxPassword.Text;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show(LanguageHelper.GetString("FillFieldsForAuth"), "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("FillFieldsForAuth"), LanguageHelper.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (!ValidationHelper.IsValidEmail(email))
             {
-                MessageBox.Show(LanguageHelper.GetString("InvalidEmail"),"Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("InvalidEmail"), LanguageHelper.GetString("InvalidEmail"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var user = userService.ValidateUser(email, password);
+            var user = await userService.ValidateUser(email, password);
 
             if (user != null)
             {
-                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), user.Role.Title), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), user.Role.Title), LanguageHelper.GetString("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 var mainForm = new FormMain(user);
                 mainForm.Show();
@@ -59,7 +59,7 @@ namespace branch_for_registration_1.Forms
             }
             else
             {
-                MessageBox.Show(LanguageHelper.GetString("LoginFailed"),"Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageHelper.GetString("LoginFailed"), LanguageHelper.GetString("Issue"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

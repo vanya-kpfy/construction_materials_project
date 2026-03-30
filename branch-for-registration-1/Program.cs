@@ -15,7 +15,7 @@ namespace branch_for_registration_1
             // Инициализация БД
             using (AppDbContext db = new AppDbContext())
             {
-                db.EnsureDatabaseCreated();
+                //db.EnsureDatabaseCreated();
 
                 if (!db.Roles.Any(r => r.Title == "Admin"))
                 {

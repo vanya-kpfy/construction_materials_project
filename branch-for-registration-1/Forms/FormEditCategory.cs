@@ -30,9 +30,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает категории в выпадающий список.
         /// </summary>
-        private void LoadCategories()
+        private async void LoadCategories()
         {
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             cbCategory.DataSource = categories;
             cbCategory.DisplayMember = "Name";
             cbCategory.ValueMember = "Id";
@@ -54,27 +54,29 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         private void CbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbCategory.SelectedItem != null)
+            if (cbCategory.SelectedValue is null)
             {
-                currentCategoryId = (Guid)cbCategory.SelectedValue;
-                txtName.Text = cbCategory.Text; // или ((Category)cbCategory.SelectedItem).Name
+                return;
+            }
+
+            if (Guid.TryParse(cbCategory.SelectedValue.ToString(), out Guid id))
+            {
+                currentCategoryId = id;
+                txtName.Text = cbCategory.Text;
                 txtName.Enabled = true;
                 btnSave.Enabled = true;
                 btnDelete.Enabled = true;
             }
             else
             {
-                txtName.Clear();
-                txtName.Enabled = false;
-                btnSave.Enabled = false;
-                btnDelete.Enabled = false;
+                currentCategoryId = Guid.Empty;
             }
         }
 
         /// <summary>
         /// Сохранить изменения названия категории.
         /// </summary>
-        private void btnSave_Click(object sender, EventArgs e)
+        private async void btnSave_Click(object sender, EventArgs e)
         {
             if (currentCategoryId == Guid.Empty)
             {
@@ -89,7 +91,7 @@ namespace branch_for_registration_1.Forms
 
             try
             {
-                categoryService.UpdateCategory(currentCategoryId, txtName.Text.Trim());
+                await categoryService.UpdateCategory(currentCategoryId, txtName.Text.Trim());
                 NewName = txtName.Text.Trim();
                 MessageBox.Show(LanguageHelper.GetString("CategorySaved"),LanguageHelper.GetString("Success"),MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;
@@ -97,14 +99,14 @@ namespace branch_for_registration_1.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, LanguageHelper.GetString("Error"),MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageHelper.GetString(ex.Message), LanguageHelper.GetString("Error"),MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
         /// Удалить выбранную категорию.
         /// </summary>
-        private void btnDelete_Click(object sender, EventArgs e)
+        private async void btnDelete_Click(object sender, EventArgs e)
         {
             if (currentCategoryId == Guid.Empty)
             {
@@ -116,7 +118,7 @@ namespace branch_for_registration_1.Forms
             {
                 try
                 {
-                    categoryService.DeleteCategory(currentCategoryId);
+                    await categoryService.DeleteCategory(currentCategoryId);
                     MessageBox.Show(LanguageHelper.GetString("CategoryDeleted"),LanguageHelper.GetString("Success"),MessageBoxButtons.OK, MessageBoxIcon.Information);
                     // После удаления обновляем список категорий и выбираем первую
                     LoadCategories();
@@ -137,7 +139,7 @@ namespace branch_for_registration_1.Forms
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, LanguageHelper.GetString("Error"),MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(LanguageHelper.GetString(ex.Message), LanguageHelper.GetString("Error"),MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

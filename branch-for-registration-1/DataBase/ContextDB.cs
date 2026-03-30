@@ -1,4 +1,5 @@
 ﻿using branch_for_registration_1.Classes;
+using branch_for_registration_1.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 
@@ -33,6 +34,11 @@ namespace branch_for_registration_1.DataBase
         /// Модель таблицы Айди отгрузок
         /// </summary>
         public DbSet<ShipmentItem> ShipmentItems { get; set; }
+
+        /// <summary>
+        /// Модель таблицы адресов
+        /// </summary>
+        public DbSet<Address> Addresses { get; set; }
 
         // Для тестировния
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -110,13 +116,27 @@ namespace branch_for_registration_1.DataBase
             // Отгрузки 
             modelBuilder.Entity<Shipment>(entity =>
             {
-                entity.HasKey(s => s.Id);
-                entity.Property(s => s.Id).HasDefaultValueSql("gen_random_uuid()");
-                entity.Property(s => s.ShipmentDate).IsRequired();
-                entity.Property(s => s.Destination).HasMaxLength(200);
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+                entity.Property(x => x.ShipmentDate).IsRequired();
 
                 // Связь с User
-                entity.HasOne(s => s.User).WithMany().HasForeignKey(s => s.UserId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(x => x.User).WithMany().HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(x => x.Address).WithMany().HasForeignKey(x => x.AddressId).OnDelete(DeleteBehavior.Restrict);
+            });
+
+            // Адреса
+            modelBuilder.Entity<Address>(entity =>
+            {
+                entity.HasKey(x => x.Id);
+                entity.Property(x => x.Id).HasDefaultValueSql("gen_random_uuid()");
+
+                entity.Property(x => x.Country).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.City).IsRequired().HasMaxLength(100);
+                entity.Property(x => x.Region).HasMaxLength(100);
+                entity.Property(x => x.Street).IsRequired().HasMaxLength(150);
+                entity.Property(x => x.Building).IsRequired().HasMaxLength(50);
             });
 
             // Позиции отгрузок 

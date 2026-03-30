@@ -60,11 +60,11 @@
             this.txtStreet.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtStreet.ForeColor = System.Drawing.Color.Black;
             this.txtStreet.Location = new System.Drawing.Point(238, 315);
-            this.txtStreet.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtStreet.Margin = new System.Windows.Forms.Padding(2);
             this.txtStreet.Multiline = true;
             this.txtStreet.Name = "txtStreet";
             this.txtStreet.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtStreet.Size = new System.Drawing.Size(283, 34);
+            this.txtStreet.Size = new System.Drawing.Size(269, 34);
             this.txtStreet.TabIndex = 12;
             this.txtStreet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -74,9 +74,9 @@
             this.cbProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbProduct.FormattingEnabled = true;
             this.cbProduct.Location = new System.Drawing.Point(238, 367);
-            this.cbProduct.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbProduct.Margin = new System.Windows.Forms.Padding(2);
             this.cbProduct.Name = "cbProduct";
-            this.cbProduct.Size = new System.Drawing.Size(283, 37);
+            this.cbProduct.Size = new System.Drawing.Size(269, 37);
             this.cbProduct.TabIndex = 13;
             // 
             // nudQuantity
@@ -84,9 +84,9 @@
             this.nudQuantity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.nudQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.nudQuantity.Location = new System.Drawing.Point(238, 420);
-            this.nudQuantity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nudQuantity.Margin = new System.Windows.Forms.Padding(2);
             this.nudQuantity.Name = "nudQuantity";
-            this.nudQuantity.Size = new System.Drawing.Size(281, 36);
+            this.nudQuantity.Size = new System.Drawing.Size(269, 36);
             this.nudQuantity.TabIndex = 14;
             // 
             // labelTextVisualStreet
@@ -140,10 +140,10 @@
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(78, 560);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAdd.Location = new System.Drawing.Point(607, 499);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(2);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(371, 47);
+            this.btnAdd.Size = new System.Drawing.Size(376, 47);
             this.btnAdd.TabIndex = 18;
             this.btnAdd.Text = "Добавить товар";
             this.btnAdd.UseVisualStyleBackColor = false;
@@ -158,8 +158,8 @@
             this.btnCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCreate.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnCreate.ForeColor = System.Drawing.Color.White;
-            this.btnCreate.Location = new System.Drawing.Point(736, 560);
-            this.btnCreate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCreate.Location = new System.Drawing.Point(93, 499);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(2);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(376, 47);
             this.btnCreate.TabIndex = 19;
@@ -188,7 +188,7 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(778, 46);
+            this.label1.Location = new System.Drawing.Point(653, 37);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(259, 37);
@@ -200,8 +200,8 @@
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBox1.BackColor = System.Drawing.Color.Black;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(593, 27);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox1.Location = new System.Drawing.Point(536, 28);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -212,12 +212,12 @@
             // 
             this.dgvCart.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.dgvCart.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCart.Location = new System.Drawing.Point(682, 112);
-            this.dgvCart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvCart.Location = new System.Drawing.Point(578, 112);
+            this.dgvCart.Margin = new System.Windows.Forms.Padding(2);
             this.dgvCart.Name = "dgvCart";
             this.dgvCart.RowHeadersWidth = 72;
             this.dgvCart.RowTemplate.Height = 31;
-            this.dgvCart.Size = new System.Drawing.Size(472, 399);
+            this.dgvCart.Size = new System.Drawing.Size(440, 344);
             this.dgvCart.TabIndex = 23;
             // 
             // txtBuilding
@@ -227,11 +227,11 @@
             this.txtBuilding.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtBuilding.ForeColor = System.Drawing.Color.Black;
             this.txtBuilding.Location = new System.Drawing.Point(238, 264);
-            this.txtBuilding.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBuilding.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuilding.Multiline = true;
             this.txtBuilding.Name = "txtBuilding";
             this.txtBuilding.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtBuilding.Size = new System.Drawing.Size(283, 34);
+            this.txtBuilding.Size = new System.Drawing.Size(269, 34);
             this.txtBuilding.TabIndex = 24;
             this.txtBuilding.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -242,11 +242,11 @@
             this.txtRegion.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtRegion.ForeColor = System.Drawing.Color.Black;
             this.txtRegion.Location = new System.Drawing.Point(238, 215);
-            this.txtRegion.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtRegion.Margin = new System.Windows.Forms.Padding(2);
             this.txtRegion.Multiline = true;
             this.txtRegion.Name = "txtRegion";
             this.txtRegion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtRegion.Size = new System.Drawing.Size(283, 34);
+            this.txtRegion.Size = new System.Drawing.Size(269, 34);
             this.txtRegion.TabIndex = 25;
             this.txtRegion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -257,11 +257,11 @@
             this.txtCity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtCity.ForeColor = System.Drawing.Color.Black;
             this.txtCity.Location = new System.Drawing.Point(238, 165);
-            this.txtCity.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCity.Margin = new System.Windows.Forms.Padding(2);
             this.txtCity.Multiline = true;
             this.txtCity.Name = "txtCity";
             this.txtCity.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtCity.Size = new System.Drawing.Size(283, 34);
+            this.txtCity.Size = new System.Drawing.Size(269, 34);
             this.txtCity.TabIndex = 26;
             this.txtCity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -272,11 +272,11 @@
             this.txtCountry.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtCountry.ForeColor = System.Drawing.Color.Black;
             this.txtCountry.Location = new System.Drawing.Point(238, 112);
-            this.txtCountry.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtCountry.Margin = new System.Windows.Forms.Padding(2);
             this.txtCountry.Multiline = true;
             this.txtCountry.Name = "txtCountry";
             this.txtCountry.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtCountry.Size = new System.Drawing.Size(283, 34);
+            this.txtCountry.Size = new System.Drawing.Size(269, 34);
             this.txtCountry.TabIndex = 27;
             this.txtCountry.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -366,7 +366,7 @@
             this.Controls.Add(this.txtStreet);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormShipment";
             this.Text = "Otgruzka";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
