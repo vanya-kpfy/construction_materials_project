@@ -22,8 +22,7 @@ namespace branch_for_registration_1.Forms
             userService = new WorkingWithUsers();
 
             // Применяем запрет пробелов и Enter ко всем текстовым полям
-            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
-            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
+            ValidationHelper.DisableSpaceAndEnter(textBoxEmail, textBoxPassword);
         }
 
         /// <summary>
@@ -31,37 +30,36 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonLogin_Click(object sender, EventArgs e)
+        private async void buttonLogin_Click(object sender, EventArgs e)
         {
-            var email = textBoxEmail.Text.Trim();
+            var email = textBoxEmail.Text;
             var password = textBoxPassword.Text;
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
             {
-                MessageBox.Show("Please enter email and password!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("FillFieldsForAuth"), LanguageHelper.GetString("Error"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (!email.Contains("@") || !email.Contains("."))
+            if (!ValidationHelper.IsValidEmail(email))
             {
-                MessageBox.Show("Please enter a valid email address (must contain '@' and a dot).","Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("InvalidEmail"), LanguageHelper.GetString("InvalidEmail"), MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var hash = HashHelper.GetHash(password);
-            var role = userService.ValidateUser(email, hash);
+            var user = await userService.ValidateUser(email, password);
 
-            if (role != null)
+            if (user != null)
             {
-                MessageBox.Show($"Welcome, {role}!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(string.Format(LanguageHelper.GetString("LoginSuccess"), user.Role.Title), LanguageHelper.GetString("Success"), MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                FormMain mainForm = new FormMain(email, role);
+                var mainForm = new FormMain(user);
                 mainForm.Show();
                 this.Hide();
             }
             else
             {
-                MessageBox.Show("Invalid email or password, or account is blocked.","Login Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(LanguageHelper.GetString("LoginFailed"), LanguageHelper.GetString("Issue"), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

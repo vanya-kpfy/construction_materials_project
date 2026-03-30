@@ -1,145 +1,75 @@
 ﻿using branch_for_registration_1.Classes;
 using branch_for_registration_1.DataBase;
+using branch_for_registration_1.DTO;
+using branch_for_registration_1.HeshSHA256;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace branch_for_registration_1.UsersServices
 {
     /// <summary>
     /// Сервис для работы с пользователями: регистрация, вход, проверка email
     /// </summary>
-    public class WorkingWithUsers : IDisposable
+    public class WorkingWithUsers
     {
-        private AppDbContext db;
-
-        /// <summary>
-        /// Конструктор – создаёт подключение к базе данных
-        /// </summary>
-        public WorkingWithUsers()
-        {
-            db = new AppDbContext();
-        }
-
-        // Для тестирования
-        public WorkingWithUsers(AppDbContext db)
-        {
-            this.db = db;
-        }
-
         /// <summary>
         /// Проверяет, занят ли указанный email
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public bool EmailExists(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-            {
-                return false;
-            }
-            try
-            {
-                // Приводим к нижнему регистру для сравнения без учёта регистра
-                return db.Users.Any(u => u.Email.ToLower() == email.ToLower());
-            }
-            catch (Exception ex)
-            {
-                // Логируем ошибку или показываем сообщение
-                Console.WriteLine($"Error in EmailExists: {ex.Message}");
-                return false;
-            }
-        }
-
-        // Нет поля db
-        public Role GetOrCreateWorkerRole()
+        public async Task<bool> EmailExists(string email)
         {
             using (var db = new AppDbContext())
             {
-                var workerRole = db.Roles.FirstOrDefault(r => r.Title == "Worker");
-                if (workerRole == null)
+                if (string.IsNullOrEmpty(email))
                 {
-                    workerRole = new Role { Id = Guid.NewGuid(), Title = "Worker" };
-                    db.Roles.Add(workerRole);
-                    db.SaveChanges();
+                    return false;
                 }
-                return workerRole;
+
+                var emailToLower = email.Trim().ToLower();
+
+                return await db.Users.AnyAsync(u => u.Email == emailToLower);
             }
         }
-        // Dispose не нужен, так как нет поля db
 
         /// <summary>
-        /// Добавляет нового пользователя с ролью Worker
-        /// </summary>
-        /// <param name="firstName"></param>
-        /// <param name="lastName"></param>
-        /// <param name="middleName"></param>
-        /// <param name="email"></param>
-        /// <param name="passwordHash"></param>
-        public void AddUser(string firstName, string lastName, string middleName, string email, string passwordHash)
-        {
-            var workerRole = GetOrCreateWorkerRole();
-
-            // Создаём объект нового пользователя
-            User newUser = new User
-            {
-                Id = Guid.NewGuid(),
-                FirstName = firstName,
-                LastName = lastName,
-                MiddleName = string.IsNullOrEmpty(middleName) ? null : middleName,
-                Email = email,
-                PasswordHash = passwordHash,
-                RoleId = workerRole.Id,
-                IsActive = true
-            };
-            // Добавляем в таблицу и сохраняем
-            db.Users.Add(newUser);
-            db.SaveChanges();
-        }
-
-        /// <summary>
-        /// Проверяет логин пользователя и возвращает его роль
+        /// Проверяет введенные данные при входе в аккаунт
         /// </summary>
         /// <param name="email"></param>
         /// <param name="passwordHash"></param>
         /// <returns></returns>
-        public string ValidateUser(string email, string passwordHash)
+        public async Task<User> ValidateUser(string email, string password)
         {
-            var user = db.Users.Include(u => u.Role)
-                .FirstOrDefault(u =>
-                    u.Email.ToLower() == email.ToLower() &&
-                    u.PasswordHash == passwordHash &&
-                    u.IsActive);
-
-            if (user == null || user.Role == null)
+            using (var db = new AppDbContext())
             {
-                return null;
-            }
+                var emailToLower = email.Trim().ToLower();
 
-            return user.Role?.Title;
-        }
+                var user = await db.Users
+                    .Include(u => u.Role)
+                    .FirstOrDefaultAsync(u => u.Email == emailToLower && u.IsActive);
 
-        public string ValidateUserExplicit(string email, string passwordHash)
-        {
-            // Ищем пользователя с подходящими данными и загружаем его роль
-            User user = db.Users.Where(u => u.Email.ToLower() == email.ToLower() && u.PasswordHash == passwordHash && u.IsActive).FirstOrDefault();
-            if (user == null)
-            {  
-                return null; 
+                if (user is null || !HashHelper.VerifyPassword(password, user.PasswordHash))
+                {
+                    return null;
+                }
+
+                return user;
             }
-            // Явно загружаем связанную роль
-            db.Entry(user).Reference(u => u.Role).Load();
-            return user.Role?.Title;
         }
 
         /// <summary>
         /// Возвращает всех пользователей с их ролями
         /// </summary>
         /// <returns></returns>
-        public List<User> GetAllUsers()
+        public async Task<List<User>> GetAllUsers()
         {
-            return db.Users.Include(u => u.Role).ToList();
+            using (var db = new AppDbContext())
+            {
+                return await db.Users.Include(u => u.Role).ToListAsync();
+            }
         }
 
         /// <summary>
@@ -147,13 +77,16 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="newRoleId"></param>
-        public void UpdateUserRole(Guid userId, Guid newRoleId)
+        public async Task UpdateUserRole(Guid userId, Guid newRoleId)
         {
-            var user = db.Users.Find(userId);
-            if (user != null)
+            using (var db = new AppDbContext())
             {
-                user.RoleId = newRoleId;
-                db.SaveChanges();
+                var user = await db.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.RoleId = newRoleId;
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
@@ -162,13 +95,16 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="isActive"></param>
-        public void SetUserActive(Guid userId, bool isActive)
+        public async Task SetUserActive(Guid userId, bool isActive)
         {
-            var user = db.Users.Find(userId);
-            if (user != null)
+            using (var db = new AppDbContext())
             {
-                user.IsActive = isActive;
-                db.SaveChanges();
+                var user = await db.Users.FindAsync(userId);
+                if (user != null)
+                {
+                    user.IsActive = isActive;
+                    await db.SaveChangesAsync();
+                }
             }
         }
 
@@ -177,17 +113,48 @@ namespace branch_for_registration_1.UsersServices
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public User GetUserByEmail(string email)
+        public async Task<User> GetUserByEmail(string email)
         {
-            return db.Users.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            using (var db = new AppDbContext())
+            {
+                return await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
+            }
         }
 
         /// <summary>
-        /// Освобождает ресурсы контекста базы данных (без этого метода компилятор выдает ошибку, что не осуществлен метод Dispose, поэтому написал)
+        /// Метод, который создает пользователя
         /// </summary>
-        public void Dispose()
+        /// <param name="request"></param>
+        /// <exception cref="Exception"></exception>
+        public async Task Register(RegisterRequest request)
         {
-            db.Dispose();
+            using (var db = new AppDbContext())
+            {
+                if (await db.Users.AnyAsync(x => x.Email == request.Email))
+                {
+                    throw new Exception("EmailExists");
+                }
+
+                var roleId = await db.Roles
+                    .Where(x => x.Title == "Worker")
+                    .Select(x => x.Id)
+                    .FirstAsync();
+
+                var user = new User
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
+                    MiddleName = request.MiddleName,
+                    Email = request.Email.Trim().ToLower(),
+                    PasswordHash = HashHelper.GetHash(request.Password),
+                    RoleId = roleId,
+                    IsActive = true
+                };
+
+                db.Users.Add(user);
+                await db.SaveChangesAsync();
+            }
         }
     }
 }

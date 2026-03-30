@@ -1,143 +1,227 @@
 ﻿using branch_for_registration_1.Classes;
 using branch_for_registration_1.DataBase;
+using branch_for_registration_1.DTO;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace branch_for_registration_1.UsersServices
 {
-    /// <summary>
-    /// Сервис для работы с товарами
-    /// </summary>
-    public class ProductService : IDisposable
+    public class ProductService
     {
-        private AppDbContext db;
-
-        public ProductService()
-        {
-            db = new AppDbContext();
-        }
-
-        // Для тестирования
-        public ProductService(AppDbContext db)
-        {
-            this.db = db;
-        }
-
-        // Получить все товары с категориями (для DataGridView)
-        public List<Product> GetAllProducts()
-        {
-            return db.Products.Include(p => p.Category).OrderBy(p => p.Name).ToList();
-        }
-
         /// <summary>
-        /// Возвращает товары по категории
+        /// Получить список товаров для отображения
         /// </summary>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
-        public List<Product> GetProductsByCategory(Guid categoryId)
+        public async Task<List<ProductDto>> GetProducts()
         {
-            return db.Products.Include(p => p.Category).Where(p => p.CategoryId == categoryId).OrderBy(p => p.Name).ToList();
-        }
-
-        /// <summary>
-        /// Поиск товаров по артикулу или названию
-        /// </summary>
-        /// <param name="searchText"></param>
-        /// <returns></returns>
-        public List<Product> SearchProducts(string searchText)
-        {
-            var lower = searchText.ToLower();
-            return db.Products.Include(p => p.Category).Where(p => p.Article.ToLower().Contains(lower) ||p.Name.ToLower().Contains(lower)).OrderBy(p => p.Name).ToList();
-        }
-
-        /// <summary>
-        /// Расширенный поиск товаров (артикул, название, категория)
-        /// </summary>
-        /// <param name="article"></param>
-        /// <param name="name"></param>
-        /// <param name="categoryId"></param>
-        /// <returns></returns>
-        public List<Product> SearchProductsAdvanced(string article, string name, Guid? categoryId)
-        {
-            var query = db.Products.Include(p => p.Category).AsQueryable();
-            if (!string.IsNullOrEmpty(article))
+            using (var db = new AppDbContext())
             {
-                var lower = article.ToLower();
-                query = query.Where(p => p.Article.ToLower().Contains(lower));
+                return await db.Products
+                    .AsNoTracking()
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Article = p.Article,
+                        Name = p.Name,
+                        CategoryName = p.Category.Name,
+                        Unit = p.Unit,
+                        PurchasePrice = p.PurchasePrice,
+                        CurrentStock = p.CurrentStock
+                    })
+                    .OrderBy(p => p.Name)
+                    .ToListAsync();
             }
-            if (!string.IsNullOrEmpty(name))
-            {
-                var lower = name.ToLower();
-                query = query.Where(p => p.Name.ToLower().Contains(lower));
-            }
-            if (categoryId.HasValue)
-            {
-                query = query.Where(p => p.CategoryId == categoryId.Value);
-            }
-            return query.OrderBy(p => p.Name).ToList();
         }
 
         /// <summary>
-        /// Возвращает товар по идентификатору
+        /// Получить товары по категории
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Product GetProductById(Guid id)
+        public async Task<List<ProductDto>> GetProductsByCategory(Guid categoryId)
         {
-            return db.Products.Include(p => p.Category).FirstOrDefault(p => p.Id == id);
+            using (var db = new AppDbContext())
+            {
+                return await db.Products
+                    .AsNoTracking()
+                    .Where(p => p.CategoryId == categoryId)
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Article = p.Article,
+                        Name = p.Name,
+                        CategoryName = p.Category.Name,
+                        Unit = p.Unit,
+                        PurchasePrice = p.PurchasePrice,
+                        CurrentStock = p.CurrentStock
+                    })
+                    .OrderBy(p => p.Name)
+                    .ToListAsync();
+            }
         }
 
         /// <summary>
-        /// Добавляет новый товар
+        /// Поиск товаров
+        /// </summary>
+        public async Task<List<ProductDto>> SearchProducts(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                return await GetProducts();
+            }
+
+            using (var db = new AppDbContext())
+            {
+                return await db.Products
+                    .AsNoTracking()
+                    .Where(p => p.Article.Contains(searchText) || p.Name.Contains(searchText))
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Article = p.Article,
+                        Name = p.Name,
+                        CategoryName = p.Category.Name,
+                        Unit = p.Unit,
+                        PurchasePrice = p.PurchasePrice,
+                        CurrentStock = p.CurrentStock
+                    })
+                    .OrderBy(p => p.Name)
+                    .ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Получить товар по Id
+        /// </summary>
+        public async Task<Product> GetProductById(Guid id)
+        {
+            using (var db = new AppDbContext())
+            {
+                return await db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            }
+        }
+
+        /// <summary>
+        /// Метод создает товар
         /// </summary>
         /// <param name="product"></param>
-        /// <exception cref="Exception"></exception>
-        public void AddProduct(Product product)
+        public async Task CreateProduct(Product product)
         {
-            if (db.Products.Any(p => p.Article == product.Article))
-                throw new Exception("A product with this article already exists.");
-            product.Id = Guid.NewGuid();
-            db.Products.Add(product);
-            db.SaveChanges();
+            using (var db = new AppDbContext())
+            {
+                product.Id = Guid.NewGuid();
+                product.Article = await GenerateArticle();
+
+                await db.Products.AddAsync(product);
+                await db.SaveChangesAsync();
+            }
         }
 
         /// <summary>
-        /// Обновляет товар
+        /// Метод обновляет данные товара
         /// </summary>
-        /// <param name="product"></param>
+        /// <param name="updated"></param>
         /// <exception cref="Exception"></exception>
-        public void UpdateProduct(Product product)
+        public async Task UpdateProduct(Product updated)
         {
-            var existing = db.Products.Find(product.Id);
-            if (existing == null)
-                throw new Exception("Product not found.");
-            if (existing.Article != product.Article && db.Products.Any(p => p.Article == product.Article))
-                throw new Exception("A product with this article already exists.");
-            db.Entry(existing).CurrentValues.SetValues(product);
-            db.SaveChanges();
+            using (var db = new AppDbContext())
+            {
+                var existing = await db.Products.FirstOrDefaultAsync(p => p.Id == updated.Id);
+
+                if (existing is null)
+                {
+                    throw new Exception("ProductNotFound");
+                }
+
+                if (existing.Article != updated.Article &&
+                    db.Products.Any(p => p.Article == updated.Article))
+                {
+                    throw new Exception("ProductWithSimilarArticle");
+                }
+
+                existing.Name = updated.Name;
+                existing.Article = updated.Article;
+                existing.CategoryId = updated.CategoryId;
+                existing.Unit = updated.Unit;
+                existing.PurchasePrice = updated.PurchasePrice;
+                existing.CurrentStock = updated.CurrentStock;
+
+                await db.SaveChangesAsync();
+            }
         }
 
         /// <summary>
-        /// Удаляет товар (если нет в отгрузках)
+        /// Метод удаляет товар
         /// </summary>
         /// <param name="id"></param>
         /// <exception cref="Exception"></exception>
-        public void DeleteProduct(Guid id)
+        public async Task DeleteProduct(Guid id)
         {
-            var product = db.Products.Find(id);
-            if (product == null) return;
-            bool inShipments = db.ShipmentItems.Any(si => si.ProductId == id);
-            if (inShipments)
-                throw new Exception("Cannot delete a product that is part of a shipment.");
-            db.Products.Remove(product);
-            db.SaveChanges();
+            using (var db = new AppDbContext())
+            {
+                var product = await db.Products.FirstOrDefaultAsync(p => p.Id == id);
+
+                if (product is null)
+                {
+                    return;
+                }
+
+                bool usedInShipment = await db.ShipmentItems.AnyAsync(si => si.ProductId == id);
+
+                if (usedInShipment)
+                {
+                    throw new Exception("ProductCannotDeletedInShippment");
+                }
+
+                db.Products.Remove(product);
+                await db.SaveChangesAsync();
+            }
         }
 
-        public void Dispose()
+        public async Task<List<ProductDto>> SearchProductsAdvanced(string article, string name, Guid? categoryId)
         {
-            db.Dispose();
+            using (var db = new AppDbContext())
+            {
+                var query = db.Products.AsNoTracking().AsQueryable();
+
+                if (!string.IsNullOrWhiteSpace(article))
+                {
+                    query = query.Where(p => p.Article.Contains(article));
+                }
+
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    query = query.Where(p => p.Name.Contains(name));
+                }
+
+                if (categoryId.HasValue)
+                {
+                    query = query.Where(p => p.CategoryId == categoryId.Value);
+                }
+
+                return await query
+                    .Select(p => new ProductDto
+                    {
+                        Id = p.Id,
+                        Article = p.Article,
+                        Name = p.Name,
+                        CategoryName = p.Category.Name,
+                        Unit = p.Unit,
+                        PurchasePrice = p.PurchasePrice,
+                        CurrentStock = p.CurrentStock
+                    })
+                    .OrderBy(p => p.Name)
+                    .ToListAsync();
+            }
+        }
+
+        private async Task<string> GenerateArticle()
+        {
+            using (var db = new AppDbContext())
+            {
+                int count = await db.Products.CountAsync() + 1;
+                return $"ART-{count}";
+            }
         }
     }
 }

@@ -37,9 +37,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает категории в выпадающий список
         /// </summary>
-        private void LoadCategories()
+        private async void LoadCategories()
         {
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             cbCategory.DataSource = categories;
             cbCategory.DisplayMember = "Name";
             cbCategory.ValueMember = "Id";

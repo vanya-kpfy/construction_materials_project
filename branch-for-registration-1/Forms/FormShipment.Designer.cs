@@ -59,11 +59,12 @@
             this.txtStreet.BackColor = System.Drawing.Color.White;
             this.txtStreet.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtStreet.ForeColor = System.Drawing.Color.Black;
-            this.txtStreet.Location = new System.Drawing.Point(437, 582);
+            this.txtStreet.Location = new System.Drawing.Point(238, 315);
+            this.txtStreet.Margin = new System.Windows.Forms.Padding(2);
             this.txtStreet.Multiline = true;
             this.txtStreet.Name = "txtStreet";
             this.txtStreet.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtStreet.Size = new System.Drawing.Size(516, 60);
+            this.txtStreet.Size = new System.Drawing.Size(269, 34);
             this.txtStreet.TabIndex = 12;
             this.txtStreet.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -72,18 +73,20 @@
             this.cbProduct.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.cbProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.cbProduct.FormattingEnabled = true;
-            this.cbProduct.Location = new System.Drawing.Point(437, 678);
+            this.cbProduct.Location = new System.Drawing.Point(238, 367);
+            this.cbProduct.Margin = new System.Windows.Forms.Padding(2);
             this.cbProduct.Name = "cbProduct";
-            this.cbProduct.Size = new System.Drawing.Size(516, 60);
+            this.cbProduct.Size = new System.Drawing.Size(269, 37);
             this.cbProduct.TabIndex = 13;
             // 
             // nudQuantity
             // 
             this.nudQuantity.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.nudQuantity.Font = new System.Drawing.Font("Microsoft Sans Serif", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.nudQuantity.Location = new System.Drawing.Point(437, 776);
+            this.nudQuantity.Location = new System.Drawing.Point(238, 420);
+            this.nudQuantity.Margin = new System.Windows.Forms.Padding(2);
             this.nudQuantity.Name = "nudQuantity";
-            this.nudQuantity.Size = new System.Drawing.Size(516, 58);
+            this.nudQuantity.Size = new System.Drawing.Size(269, 36);
             this.nudQuantity.TabIndex = 14;
             // 
             // labelTextVisualStreet
@@ -93,9 +96,10 @@
             this.labelTextVisualStreet.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualStreet.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualStreet.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualStreet.Location = new System.Drawing.Point(113, 582);
+            this.labelTextVisualStreet.Location = new System.Drawing.Point(62, 315);
+            this.labelTextVisualStreet.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualStreet.Name = "labelTextVisualStreet";
-            this.labelTextVisualStreet.Size = new System.Drawing.Size(129, 44);
+            this.labelTextVisualStreet.Size = new System.Drawing.Size(76, 26);
             this.labelTextVisualStreet.TabIndex = 15;
             this.labelTextVisualStreet.Text = "Улица";
             // 
@@ -106,9 +110,10 @@
             this.labelTextVisualProduct.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualProduct.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualProduct.Location = new System.Drawing.Point(113, 678);
+            this.labelTextVisualProduct.Location = new System.Drawing.Point(62, 367);
+            this.labelTextVisualProduct.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualProduct.Name = "labelTextVisualProduct";
-            this.labelTextVisualProduct.Size = new System.Drawing.Size(125, 44);
+            this.labelTextVisualProduct.Size = new System.Drawing.Size(72, 26);
             this.labelTextVisualProduct.TabIndex = 16;
             this.labelTextVisualProduct.Text = "Товар";
             // 
@@ -119,9 +124,10 @@
             this.labelTextVisualCountProduct.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualCountProduct.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualCountProduct.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualCountProduct.Location = new System.Drawing.Point(113, 776);
+            this.labelTextVisualCountProduct.Location = new System.Drawing.Point(62, 420);
+            this.labelTextVisualCountProduct.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualCountProduct.Name = "labelTextVisualCountProduct";
-            this.labelTextVisualCountProduct.Size = new System.Drawing.Size(226, 44);
+            this.labelTextVisualCountProduct.Size = new System.Drawing.Size(133, 26);
             this.labelTextVisualCountProduct.TabIndex = 17;
             this.labelTextVisualCountProduct.Text = "Количество";
             // 
@@ -134,9 +140,10 @@
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnAdd.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(143, 1033);
+            this.btnAdd.Location = new System.Drawing.Point(607, 499);
+            this.btnAdd.Margin = new System.Windows.Forms.Padding(2);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(681, 86);
+            this.btnAdd.Size = new System.Drawing.Size(376, 47);
             this.btnAdd.TabIndex = 18;
             this.btnAdd.Text = "Добавить товар";
             this.btnAdd.UseVisualStyleBackColor = false;
@@ -151,9 +158,10 @@
             this.btnCreate.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnCreate.Font = new System.Drawing.Font("Microsoft Sans Serif", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnCreate.ForeColor = System.Drawing.Color.White;
-            this.btnCreate.Location = new System.Drawing.Point(1349, 1033);
+            this.btnCreate.Location = new System.Drawing.Point(93, 499);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(2);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(689, 86);
+            this.btnCreate.Size = new System.Drawing.Size(376, 47);
             this.btnCreate.TabIndex = 19;
             this.btnCreate.Text = "Создать отгрузку";
             this.btnCreate.UseVisualStyleBackColor = false;
@@ -166,9 +174,10 @@
             this.labelTextVisualShipment.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualShipment.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualShipment.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualShipment.Location = new System.Drawing.Point(250, 68);
+            this.labelTextVisualShipment.Location = new System.Drawing.Point(136, 37);
+            this.labelTextVisualShipment.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualShipment.Name = "labelTextVisualShipment";
-            this.labelTextVisualShipment.Size = new System.Drawing.Size(614, 64);
+            this.labelTextVisualShipment.Size = new System.Drawing.Size(333, 37);
             this.labelTextVisualShipment.TabIndex = 20;
             this.labelTextVisualShipment.Text = "Оформление отгрузки";
             // 
@@ -179,9 +188,10 @@
             this.label1.BackColor = System.Drawing.Color.Transparent;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(1427, 84);
+            this.label1.Location = new System.Drawing.Point(653, 37);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(486, 64);
+            this.label1.Size = new System.Drawing.Size(259, 37);
             this.label1.TabIndex = 21;
             this.label1.Text = "Текущие позиции";
             // 
@@ -190,22 +200,24 @@
             this.textBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.textBox1.BackColor = System.Drawing.Color.Black;
             this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.textBox1.Location = new System.Drawing.Point(1088, 50);
+            this.textBox1.Location = new System.Drawing.Point(536, 28);
+            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(7, 1100);
+            this.textBox1.Size = new System.Drawing.Size(4, 596);
             this.textBox1.TabIndex = 22;
             // 
             // dgvCart
             // 
             this.dgvCart.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.dgvCart.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvCart.Location = new System.Drawing.Point(1250, 206);
+            this.dgvCart.Location = new System.Drawing.Point(578, 112);
+            this.dgvCart.Margin = new System.Windows.Forms.Padding(2);
             this.dgvCart.Name = "dgvCart";
             this.dgvCart.RowHeadersWidth = 72;
             this.dgvCart.RowTemplate.Height = 31;
-            this.dgvCart.Size = new System.Drawing.Size(866, 736);
+            this.dgvCart.Size = new System.Drawing.Size(440, 344);
             this.dgvCart.TabIndex = 23;
             // 
             // txtBuilding
@@ -214,11 +226,12 @@
             this.txtBuilding.BackColor = System.Drawing.Color.White;
             this.txtBuilding.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtBuilding.ForeColor = System.Drawing.Color.Black;
-            this.txtBuilding.Location = new System.Drawing.Point(437, 487);
+            this.txtBuilding.Location = new System.Drawing.Point(238, 264);
+            this.txtBuilding.Margin = new System.Windows.Forms.Padding(2);
             this.txtBuilding.Multiline = true;
             this.txtBuilding.Name = "txtBuilding";
             this.txtBuilding.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtBuilding.Size = new System.Drawing.Size(516, 60);
+            this.txtBuilding.Size = new System.Drawing.Size(269, 34);
             this.txtBuilding.TabIndex = 24;
             this.txtBuilding.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -228,11 +241,12 @@
             this.txtRegion.BackColor = System.Drawing.Color.White;
             this.txtRegion.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtRegion.ForeColor = System.Drawing.Color.Black;
-            this.txtRegion.Location = new System.Drawing.Point(437, 396);
+            this.txtRegion.Location = new System.Drawing.Point(238, 215);
+            this.txtRegion.Margin = new System.Windows.Forms.Padding(2);
             this.txtRegion.Multiline = true;
             this.txtRegion.Name = "txtRegion";
             this.txtRegion.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtRegion.Size = new System.Drawing.Size(516, 60);
+            this.txtRegion.Size = new System.Drawing.Size(269, 34);
             this.txtRegion.TabIndex = 25;
             this.txtRegion.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -242,11 +256,12 @@
             this.txtCity.BackColor = System.Drawing.Color.White;
             this.txtCity.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtCity.ForeColor = System.Drawing.Color.Black;
-            this.txtCity.Location = new System.Drawing.Point(437, 304);
+            this.txtCity.Location = new System.Drawing.Point(238, 165);
+            this.txtCity.Margin = new System.Windows.Forms.Padding(2);
             this.txtCity.Multiline = true;
             this.txtCity.Name = "txtCity";
             this.txtCity.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtCity.Size = new System.Drawing.Size(516, 60);
+            this.txtCity.Size = new System.Drawing.Size(269, 34);
             this.txtCity.TabIndex = 26;
             this.txtCity.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -256,11 +271,12 @@
             this.txtCountry.BackColor = System.Drawing.Color.White;
             this.txtCountry.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.txtCountry.ForeColor = System.Drawing.Color.Black;
-            this.txtCountry.Location = new System.Drawing.Point(437, 206);
+            this.txtCountry.Location = new System.Drawing.Point(238, 112);
+            this.txtCountry.Margin = new System.Windows.Forms.Padding(2);
             this.txtCountry.Multiline = true;
             this.txtCountry.Name = "txtCountry";
             this.txtCountry.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.txtCountry.Size = new System.Drawing.Size(516, 60);
+            this.txtCountry.Size = new System.Drawing.Size(269, 34);
             this.txtCountry.TabIndex = 27;
             this.txtCountry.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -271,9 +287,10 @@
             this.labelTextVisualBuilding.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualBuilding.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualBuilding.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualBuilding.Location = new System.Drawing.Point(113, 487);
+            this.labelTextVisualBuilding.Location = new System.Drawing.Point(62, 264);
+            this.labelTextVisualBuilding.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualBuilding.Name = "labelTextVisualBuilding";
-            this.labelTextVisualBuilding.Size = new System.Drawing.Size(149, 44);
+            this.labelTextVisualBuilding.Size = new System.Drawing.Size(87, 26);
             this.labelTextVisualBuilding.TabIndex = 28;
             this.labelTextVisualBuilding.Text = "Здание";
             // 
@@ -284,9 +301,10 @@
             this.labelTextVisualRegion.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualRegion.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualRegion.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualRegion.Location = new System.Drawing.Point(113, 396);
+            this.labelTextVisualRegion.Location = new System.Drawing.Point(62, 215);
+            this.labelTextVisualRegion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualRegion.Name = "labelTextVisualRegion";
-            this.labelTextVisualRegion.Size = new System.Drawing.Size(143, 44);
+            this.labelTextVisualRegion.Size = new System.Drawing.Size(83, 26);
             this.labelTextVisualRegion.TabIndex = 29;
             this.labelTextVisualRegion.Text = "Регион";
             // 
@@ -297,9 +315,10 @@
             this.labelTextVisualCity.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualCity.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualCity.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualCity.Location = new System.Drawing.Point(113, 304);
+            this.labelTextVisualCity.Location = new System.Drawing.Point(62, 165);
+            this.labelTextVisualCity.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualCity.Name = "labelTextVisualCity";
-            this.labelTextVisualCity.Size = new System.Drawing.Size(126, 44);
+            this.labelTextVisualCity.Size = new System.Drawing.Size(73, 26);
             this.labelTextVisualCity.TabIndex = 30;
             this.labelTextVisualCity.Text = "Город";
             // 
@@ -310,20 +329,21 @@
             this.labelTextVisualCountry.BackColor = System.Drawing.Color.Transparent;
             this.labelTextVisualCountry.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.labelTextVisualCountry.ForeColor = System.Drawing.Color.Black;
-            this.labelTextVisualCountry.Location = new System.Drawing.Point(113, 206);
+            this.labelTextVisualCountry.Location = new System.Drawing.Point(62, 112);
+            this.labelTextVisualCountry.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.labelTextVisualCountry.Name = "labelTextVisualCountry";
-            this.labelTextVisualCountry.Size = new System.Drawing.Size(147, 44);
+            this.labelTextVisualCountry.Size = new System.Drawing.Size(86, 26);
             this.labelTextVisualCountry.TabIndex = 31;
             this.labelTextVisualCountry.Text = "Страна";
             // 
             // FormShipment
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(2178, 1202);
+            this.ClientSize = new System.Drawing.Size(1049, 575);
             this.Controls.Add(this.labelTextVisualCountry);
             this.Controls.Add(this.labelTextVisualCity);
             this.Controls.Add(this.labelTextVisualRegion);
@@ -346,6 +366,7 @@
             this.Controls.Add(this.txtStreet);
             this.DoubleBuffered = true;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormShipment";
             this.Text = "Otgruzka";
             this.WindowState = System.Windows.Forms.FormWindowState.Minimized;

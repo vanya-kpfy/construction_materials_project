@@ -1,4 +1,4 @@
-﻿using branch_for_registration_1.HeshSHA256;
+﻿using branch_for_registration_1.DTO;
 using branch_for_registration_1.UsersServices;
 using branch_for_registration_1.ValidationTextBox;
 using System;
@@ -22,12 +22,7 @@ namespace branch_for_registration_1.Forms
             userService = new WorkingWithUsers();
 
             // Запрет пробелов и Enter на всех текстовых полях
-            ValidationHelper.DisableSpaceAndEnter(textBoxFirstName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxLastName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxMiddleName);
-            ValidationHelper.DisableSpaceAndEnter(textBoxEmail);
-            ValidationHelper.DisableSpaceAndEnter(textBoxPassword);
-            ValidationHelper.DisableSpaceAndEnter(textBoxConfirmPassword);
+            ValidationHelper.DisableSpaceAndEnter(textBoxFirstName, textBoxLastName, textBoxMiddleName, textBoxEmail, textBoxPassword, textBoxConfirmPassword);
         }
 
         /// <summary>
@@ -35,58 +30,29 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void buttonRegister_Click(object sender, EventArgs e)
+        private async void buttonRegister_Click(object sender, EventArgs e)
         {
-            var firstName = textBoxFirstName.Text.Trim();
-            var lastName = textBoxLastName.Text.Trim();
-            var middleName = textBoxMiddleName.Text.Trim();
-            var email = textBoxEmail.Text.Trim();
-            var password = textBoxPassword.Text;
-            var confirm = textBoxConfirmPassword.Text;
-
-            // Проверки
-            if (string.IsNullOrEmpty(firstName) || string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            var request = new RegisterRequest
             {
-                MessageBox.Show("Please fill in first name, last name, email and password!","Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                FirstName = textBoxFirstName.Text.Trim(),
+                LastName = textBoxLastName.Text.Trim(),
+                MiddleName = textBoxMiddleName.Text.Trim(),
+                Email = textBoxEmail.Text.Trim(),
+                Password = textBoxPassword.Text,
+                ConfirmPassword = textBoxConfirmPassword.Text
+            };
 
-            if (!email.Contains("@") || !email.Contains("."))
+            try
             {
-                MessageBox.Show("Please enter a valid email address (must contain '@' and a dot).","Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                await userService.Register(request);
 
-            if (password != confirm)
+                MessageBox.Show(LanguageHelper.GetString("Success"));
+                this.Close();
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show("Passwords do not match!","Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MessageBox.Show(LanguageHelper.GetString(ex.Message));
             }
-
-            if (password.Length < 3)
-            {
-                MessageBox.Show("Password is too short (minimum 3 characters)","Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (!ValidationHelper.IsValidEmail(email))
-            {
-                MessageBox.Show("Please enter a valid email address (e.g., name@domain.com).","Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // Проверка уникальности email
-            if (userService.EmailExists(email))
-            {
-                MessageBox.Show("This email is already registered!","Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            var hash = HashHelper.GetHash(password);
-            userService.AddUser(firstName, lastName, middleName, email, hash);
-
-            MessageBox.Show("Registration successful! You can now log in.","Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            this.Close();
         }
 
         /// <summary>

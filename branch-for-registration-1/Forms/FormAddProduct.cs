@@ -11,7 +11,6 @@ namespace branch_for_registration_1.Forms
     /// </summary>
     public partial class FormAddProduct : Form
     {
-        private ProductService productService = new ProductService();
         private CategoryService categoryService = new CategoryService();
 
         /// <summary>
@@ -28,9 +27,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает категории в выпадающий список
         /// </summary>
-        private void LoadCategories()
+        private async void LoadCategories()
         {
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             cbCategory.DataSource = categories;
             cbCategory.DisplayMember = "Name";
             cbCategory.ValueMember = "Id";
@@ -41,17 +40,15 @@ namespace branch_for_registration_1.Forms
         /// </summary>
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtName.Text) || string.IsNullOrWhiteSpace(txtArticle.Text))
+            if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show(LanguageHelper.GetString("NameArticleRequired"),LanguageHelper.GetString("Validation"),MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(LanguageHelper.GetString("NameRequired"), LanguageHelper.GetString("Validation"), MessageBoxButtons.OK,MessageBoxIcon.Warning);
                 return;
             }
 
             CreatedProduct = new Product
             {
-                Id = Guid.NewGuid(),
                 Name = txtName.Text.Trim(),
-                Article = txtArticle.Text.Trim(),
                 Unit = txtUnit.Text.Trim(),
                 PurchasePrice = nudPrice.Value,
                 CategoryId = cbCategory.SelectedValue != null ? (Guid)cbCategory.SelectedValue : Guid.Empty

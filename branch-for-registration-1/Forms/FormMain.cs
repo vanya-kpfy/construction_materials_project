@@ -1,10 +1,11 @@
 ﻿using branch_for_registration_1.Classes;
+using branch_for_registration_1.DTO;
 using branch_for_registration_1.UsersServices;
+using branch_for_registration_1.ValidationTextBox;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using branch_for_registration_1.ValidationTextBox;
 
 namespace branch_for_registration_1.Forms
 {
@@ -13,32 +14,25 @@ namespace branch_for_registration_1.Forms
     /// </summary>
     public partial class FormMain : Form
     {
-        private string userEmail;
-        private string userRole;
+        private User currentUser;
         private WorkingWithUsers userService;
         private CategoryService categoryService;
         private ProductService productService;
-        private Guid currentUserId;
-        public static List<Product> LastSearchResults { get; set; }
+        public static List<ProductDto> LastSearchResults { get; set; }
 
         // Словарь для быстрого поиска ID категории по названию (остаётся)
         private Dictionary<string, Guid> categoryIds;
 
-        public FormMain(string email, string role)
+        public FormMain(User user)
         {
             InitializeComponent();
-
-            userEmail = email;
-            userRole = role;
+            currentUser = user;
             userService = new WorkingWithUsers();
             categoryService = new CategoryService();
             productService = new ProductService();
 
-            var user = userService.GetUserByEmail(email);
-            currentUserId = user?.Id ?? Guid.Empty;
-
             // Показываем кнопку админа только для администратора
-            buttonAdmin.Visible = (role == "Admin");
+            buttonAdmin.Visible = currentUser.Role.Title == "Admin";
 
             // Настраиваем внешний вид таблицы
             SetupDataGridViewStyle();
@@ -59,10 +53,10 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает соответствие названий категорий и их GUID из базы данных.
         /// </summary>
-        private void LoadCategoryIds()
+        private async void LoadCategoryIds()
         {
             categoryIds = new Dictionary<string, Guid>();
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
             foreach (var cat in categories)
             {
                 categoryIds[cat.Name] = cat.Id;
@@ -71,10 +65,10 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Создаёт кнопки для каждой категории и добавляет их в панель.
         /// </summary>
-        private void LoadCategoryButtons()
+        private async void LoadCategoryButtons()
         {
             pnlCategories.Controls.Clear();
-            var categories = categoryService.GetAllCategories();
+            var categories = await categoryService.GetAllCategories();
 
             int y = 5; 
             foreach (var cat in categories)
@@ -102,9 +96,9 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает товары по ID категории
         /// </summary>
-        private void LoadProductsByCategoryId(Guid categoryId)
+        private async void LoadProductsByCategoryId(Guid categoryId)
         {
-            var products = productService.GetProductsByCategory(categoryId);
+            var products = await productService.GetProductsByCategory(categoryId);
             FillProductGrid(products);
         }
 
@@ -119,14 +113,13 @@ namespace branch_for_registration_1.Forms
                 btnAllProducts.Click += (s, e) => LoadAllProducts();
             }
 
-            buttonSearch.Click += (s, e) =>
+            buttonSearch.Click += async (s, e) =>
             {
                 using (var searchForm = new FormSearch(productService))
                 {
                     if (searchForm.ShowDialog() == DialogResult.OK)
                     {
-                        var products = productService.SearchProductsAdvanced(searchForm.Article,searchForm.ProductName,searchForm.CategoryId
-                        );
+                        var products = await productService.SearchProductsAdvanced(searchForm.Article,searchForm.ProductName,searchForm.CategoryId);
                         FillProductGrid(products);
                     }
                 }
@@ -134,7 +127,7 @@ namespace branch_for_registration_1.Forms
 
             buttonShipment.Click += (s, e) =>
             {
-                var shipmentForm = new FormShipment(currentUserId);
+                var shipmentForm = new FormShipment(currentUser.Id);
                 shipmentForm.ShowDialog();
                 LoadAllProducts(); // обновляем остатки
             };
@@ -155,16 +148,16 @@ namespace branch_for_registration_1.Forms
         /// <summary>
         /// Загружает все товары
         /// </summary>
-        private void LoadAllProducts()
+        private async void LoadAllProducts()
         {
-            var products = productService.GetAllProducts();
+            var products = await productService.GetProducts();
             FillProductGrid(products);
         }
 
         /// <summary>
         /// Заполняет таблицу товаров
         /// </summary>
-        private void FillProductGrid(List<Product> products)
+        private void FillProductGrid(List<ProductDto> products)
         {
             dgvProducts.Rows.Clear();
             dgvProducts.Columns.Clear();
@@ -178,7 +171,7 @@ namespace branch_for_registration_1.Forms
 
             foreach (var p in products)
             {
-                dgvProducts.Rows.Add(p.Article,p.Name,p.Category?.Name,p.Unit,p.PurchasePrice.ToString("F2"),p.CurrentStock);
+                dgvProducts.Rows.Add(p.Article,p.Name,p.CategoryName,p.Unit,p.PurchasePrice.ToString("F2"),p.CurrentStock);
             }
 
             // Настройка ширины колонок
@@ -229,8 +222,6 @@ namespace branch_for_registration_1.Forms
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            categoryService.Dispose();
-            productService.Dispose();
             base.OnFormClosing(e);
         }
     }

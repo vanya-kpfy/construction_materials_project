@@ -2,7 +2,6 @@
 using branch_for_registration_1.DataBase;
 using branch_for_registration_1.Forms;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using System.Linq;
 
@@ -16,7 +15,19 @@ namespace branch_for_registration_1
             // Инициализация БД
             using (AppDbContext db = new AppDbContext())
             {
-                
+                //db.EnsureDatabaseCreated();
+
+                if (!db.Roles.Any(r => r.Title == "Admin"))
+                {
+                    db.Roles.Add(new Role { Title = "Admin" });
+                }
+
+                if (!db.Roles.Any(r => r.Title == "Worker"))
+                {
+                    db.Roles.Add(new Role { Title = "Worker" });
+                }
+
+                db.SaveChanges();
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

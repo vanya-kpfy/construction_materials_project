@@ -24,5 +24,17 @@ namespace branch_for_registration_1.HeshSHA256
                 return sb.ToString();
             }
         }
+
+        /// <summary>
+        /// Метод, который проверяет пароли на совпадение
+        /// </summary>
+        /// <param name="inputPassword"></param>
+        /// <param name="storedHash"></param>
+        /// <returns></returns>
+        public static bool VerifyPassword(string inputPassword, string passwordHashInDB)
+        {
+            var hashOfInput = GetHash(inputPassword);
+            return hashOfInput == passwordHashInDB;
+        }
     }
 }
